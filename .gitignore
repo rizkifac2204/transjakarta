@@ -40,3 +40,7 @@ next-env.d.ts
 /logs
 /src/uploads
 .baileys
+
+/src/generated/prisma
+
+/src/generated/prisma

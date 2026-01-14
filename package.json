@@ -2,11 +2,13 @@
   "name": "transjakarta-survey",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "node prisma/seeds/index.js"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.19",
