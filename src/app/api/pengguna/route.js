@@ -1,4 +1,4 @@
-import { verifyAuth } from "@/libs/auth";
+import { verifyAuth } from "@/libs/jwt";
 import { parseFormData } from "@/utils/parseFormData";
 import getLogs from "@/libs/getLogs";
 import bcrypt from "bcryptjs";

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { editAuthAfterLogout, expireUserCookie, verifyAuth } from "@/libs/auth";
+import { editAuthAfterLogout } from "@/libs/auth";
+import { expireUserCookie, verifyAuth } from "@/libs/jwt";
 import getLogs from "@/libs/getLogs";
 
 export async function GET(request) {

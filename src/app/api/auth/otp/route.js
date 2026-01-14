@@ -1,6 +1,7 @@
 import { getTempSession, deleteTempSession } from "@/libs/tempSession";
 import { verifyMfaToken } from "@/libs/mfa";
-import { setUserCookie, editAuthAfterLogin } from "@/libs/auth";
+import { setUserCookie } from "@/libs/jwt";
+import { editAuthAfterLogin } from "@/libs/auth";
 import getLogs from "@/libs/getLogs";
 
 export const dynamic = "force-dynamic";

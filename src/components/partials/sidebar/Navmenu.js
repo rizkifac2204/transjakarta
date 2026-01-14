@@ -6,18 +6,10 @@ import Link from "next/link";
 import Icon from "@/components/ui/Icon";
 import useMobileMenu from "@/themes/dashcode/hooks/useMobileMenu";
 import Submenu from "./Submenu";
-import { useWhatsappContext } from "@/providers/whatsapp-provider";
-
-const Badge = ({ value, whatsapp, isWhatsapp }) => {
-  if (!value) return null;
-  if (isWhatsapp) return <span className="menu-badge">{whatsapp?.status}</span>;
-  return <span className="menu-badge">{value}</span>;
-};
 
 import menuItems from "@/configs/menuItems";
 
 export default function Navmenu() {
-  const { whatsapp } = useWhatsappContext();
   const { user } = useAuthContext();
   const [activeSubmenu, setActiveSubmenu] = useState(null);
   const [mobileMenu, setMobileMenu] = useMobileMenu();
@@ -106,11 +98,6 @@ export default function Navmenu() {
                   <Icon icon={item.icon} />
                 </span>
                 <div className="text-box flex-grow">{item.title}</div>
-                <Badge
-                  value={item.badge}
-                  whatsapp={whatsapp}
-                  isWhatsapp={item.title == "Whatsapp"}
-                />
               </Link>
             )}
 

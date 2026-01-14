@@ -1,6 +1,6 @@
 const appConfig = {
   app: {
-    name: "Survey Transajakarta",
+    name: "Transajakarta",
     description: "-",
   },
   // layout

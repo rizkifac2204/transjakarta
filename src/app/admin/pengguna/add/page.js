@@ -1,6 +1,6 @@
 import Card from "@/components/ui/Card";
 import { getLevel } from "@/libs/level";
-import { verifyAuth } from "@/libs/auth";
+import { verifyAuth } from "@/libs/jwt";
 import { notFound } from "next/navigation";
 import FormAddPengguna from "./_FormAddPengguna";
 

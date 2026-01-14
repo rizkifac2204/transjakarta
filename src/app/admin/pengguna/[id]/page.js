@@ -1,7 +1,7 @@
 import React from "react";
 import { getAdminDetailById } from "@/libs/user";
 import { notFound } from "next/navigation";
-import { verifyAuth } from "@/libs/auth";
+import { verifyAuth } from "@/libs/jwt";
 import { canManage } from "@/utils/manage";
 import { redirect } from "next/navigation";
 import ActionFotoPengguna from "./_ActionFotoPengguna";

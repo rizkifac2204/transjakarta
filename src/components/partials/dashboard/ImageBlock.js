@@ -3,7 +3,7 @@
 import { useAuthContext } from "@/providers/auth-provider";
 import Link from "next/link";
 
-const ImageBlock = ({ countAdmin }) => {
+const ImageBlock = ({ countUser }) => {
   const { user } = useAuthContext();
 
   return (
@@ -20,7 +20,7 @@ const ImageBlock = ({ countAdmin }) => {
         </div>
         <p className="text-sm text-white font-normal">
           Kamu diantara{" "}
-          <Link href={"/admin/pengguna"}>{countAdmin} Pengguna</Link> Lainnya
+          <Link href={"/admin/pengguna"}>{countUser} Pengguna</Link> Lainnya
         </p>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { verifyAuth } from "@/libs/auth";
+import { verifyAuth } from "@/libs/jwt";
 import { canManage } from "@/utils/manage";
 import getLogs from "@/libs/getLogs";
 import { getAdminDetailById, updateAdmin } from "@/libs/user";

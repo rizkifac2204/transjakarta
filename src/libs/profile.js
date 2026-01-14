@@ -1,5 +1,5 @@
 import prisma from "./prisma";
-import { verifyAuth } from "./auth";
+import { verifyAuth } from "./jwt";
 
 export async function getProfile() {
   const profile = await getProfileOnly();

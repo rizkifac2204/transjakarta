@@ -2,10 +2,8 @@ import {
   getAuthByUsername,
   editAuthAfterLogin,
   editAuthAfterLogout,
-  setUserCookie,
-  expireUserCookie,
-  verifyAuth,
 } from "@/libs/auth";
+import { verifyAuth, expireUserCookie, setUserCookie } from "@/libs/jwt";
 import { createTempSession } from "@/libs/tempSession";
 import getLogs from "@/libs/getLogs";
 import bcrypt from "bcryptjs";

@@ -1,5 +1,5 @@
 import React from "react";
-import { verifyAuth } from "@/libs/auth";
+import { verifyAuth } from "@/libs/jwt";
 import { canManage } from "@/utils/manage";
 import { getAdmin } from "@/libs/user";
 import ContenUser from "./_Content";
