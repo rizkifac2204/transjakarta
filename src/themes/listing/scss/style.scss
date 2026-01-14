@@ -549,8 +549,8 @@ blockquote:not(:last-child) {
   --bs-btn-hover-border-color: #c87f11;
   --bs-btn-active-bg: #c87f11;
   --bs-btn-active-border-color: #c87f11;
-  --bs-btn-disabled-bg: #c8a25e;
-  --bs-btn-disabled-border-color: #c8a25e;
+  --bs-btn-disabled-bg: #18448f;
+  --bs-btn-disabled-border-color: #18448f;
 }
 
 .btn:focus,
@@ -8558,7 +8558,7 @@ ListingHub Elements Styles
     justify-content: center;
     margin: 0 auto;
     background: #f5e4c1;
-    color: #c8a25e;
+    color: #18448f;
     font-size: 2rem;
     line-height: 1;
   }
@@ -8572,7 +8572,7 @@ ListingHub Elements Styles
 
   .successTitle {
     line-height: 1;
-    color: #c8a25e;
+    color: #18448f;
     letter-spacing: 0.1px;
     font-weight: 600;
     font-size: 2.2rem;

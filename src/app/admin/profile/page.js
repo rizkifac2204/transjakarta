@@ -21,7 +21,7 @@ async function Profile() {
       <div className="profiel-wrap px-[35px] pb-10 md:pt-[84px] pt-10 rounded-lg bg-white dark:bg-slate-800 lg:flex lg:space-y-0 space-y-6 justify-between items-end relative z-[1]">
         <div
           className="absolute left-0 top-0 md:h-1/2 h-[150px] w-full z-[-1] rounded-t-lg flex items-center justify-center
-             bg-gradient-to-r from-[#c8a25e] via-[#d4b06a] to-[#e1be76] dark:from-slate-700 dark:via-slate-700 dark:to-slate-700"
+             bg-gradient-to-r from-[#18448f] via-[#18448f] to-[#2f82c4] dark:from-slate-700 dark:via-slate-700 dark:to-slate-700"
         >
           <h3 className="text-white">PROFILE</h3>
         </div>
@@ -56,7 +56,7 @@ async function Profile() {
               {profile?._count?.keberatan || "0"}
             </div>
             <div className="text-sm text-slate-600 font-light dark:text-slate-300">
-              Survet Halte
+              Survey Halte
             </div>
           </div>
 

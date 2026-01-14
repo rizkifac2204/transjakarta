@@ -51,7 +51,7 @@ const SidebarLogo = ({ menuHover }) => {
 
           {(!collapsed || menuHover) && (
             <div>
-              <h1 className="text-xl font-semibold bg-gradient-to-r from-[#c8a25e] via-[#d4b06a] to-[#e1be76] bg-clip-text text-transparent">
+              <h1 className="text-xl font-semibold bg-gradient-to-r from-[#18448f] via-[#18448f] to-[#2f82c4] bg-clip-text text-transparent">
                 {appConfig.app.name}
               </h1>
             </div>

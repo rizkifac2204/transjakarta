@@ -35,7 +35,7 @@ const Breadcrumbs = () => {
       {!isHide ? (
         <div className="md:mb-6 mb-4 flex space-x-3 rtl:space-x-reverse">
           <ul className="breadcrumbs">
-            <li className="text-yellow-600">
+            <li className="text-blue-600">
               <Link href="/admin" className="text-lg">
                 <Icon icon="heroicons-outline:home" />
               </Link>
@@ -44,7 +44,7 @@ const Breadcrumbs = () => {
               </span>
             </li>
             {groupTitle && (
-              <li className="text-yellow-600">
+              <li className="text-blue-600">
                 <button type="button" className="capitalize">
                   {groupTitle}
                 </button>
