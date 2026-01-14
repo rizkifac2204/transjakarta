@@ -1,4 +1,3 @@
-// memory sementara untuk contoh, bisa diganti Redis/db untuk production
 const tempSessions = new Map();
 
 export function createTempSession(userData, expireSec = 300) {

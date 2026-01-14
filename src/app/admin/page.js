@@ -1,4 +1,4 @@
-import { getAdminCount } from "@/libs/admin";
+import { getAdminCount } from "@/libs/user";
 import { getProfile } from "@/libs/profile";
 
 import { Suspense } from "react";

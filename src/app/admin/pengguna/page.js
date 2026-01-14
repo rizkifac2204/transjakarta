@@ -1,7 +1,7 @@
 import React from "react";
 import { verifyAuth } from "@/libs/auth";
 import { canManage } from "@/utils/manage";
-import { getAdmin } from "@/libs/admin";
+import { getAdmin } from "@/libs/user";
 import ContenUser from "./_Content";
 
 export const dynamic = "force-dynamic";

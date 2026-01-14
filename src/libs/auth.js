@@ -49,7 +49,7 @@ export async function expireUserCookie() {
 
 // jika ada id, ambil selain data dengan id tersebut
 export async function getAuthByUsername(username, id) {
-  const data = await prisma.admin.findMany({
+  const data = await prisma.users.findMany({
     where: {
       username,
       ...(id && {
@@ -61,7 +61,7 @@ export async function getAuthByUsername(username, id) {
 }
 
 export async function editAuthAfterLogin(id) {
-  const data = await prisma.admin.update({
+  const data = await prisma.users.update({
     where: { id: parseInt(id) },
     data: { last_access: null, login: true },
   });
@@ -69,7 +69,7 @@ export async function editAuthAfterLogin(id) {
 }
 
 export async function editAuthAfterLogout(id) {
-  const data = await prisma.admin.update({
+  const data = await prisma.users.update({
     where: { id: parseInt(id) },
     data: { last_access: new Date(), login: false },
   });
@@ -78,7 +78,7 @@ export async function editAuthAfterLogout(id) {
 
 export async function getSession() {
   const session = await verifyAuth();
-  const data = await prisma.admin.findUnique({
+  const data = await prisma.users.findUnique({
     where: { id: parseInt(session.id), login: true },
     include: {
       level: true,
@@ -86,8 +86,7 @@ export async function getSession() {
   });
 
   if (!data) {
-    await expireUserCookie();
-    const error = new Error("Tidak Ada Akses");
+    const error = new Error("FORCE_LOGOUT");
     error.status = 401;
     throw error;
   }

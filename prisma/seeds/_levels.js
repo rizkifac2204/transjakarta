@@ -5,7 +5,7 @@ export async function main(prisma) {
 
   const levelData = [
     { id: 1, level: "DEVELOPER" },
-    { id: 2, level: "SUPER_ADMIN" },
+    { id: 2, level: "MASTER" },
     { id: 3, level: "ADMIN" },
     { id: 4, level: "SURVEYOR" },
   ];

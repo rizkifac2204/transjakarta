@@ -1,5 +1,5 @@
 import React from "react";
-import { getAdminDetailById } from "@/libs/admin";
+import { getAdminDetailById } from "@/libs/user";
 import { notFound } from "next/navigation";
 import { verifyAuth } from "@/libs/auth";
 import { canManage } from "@/utils/manage";

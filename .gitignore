@@ -39,8 +39,4 @@ next-env.d.ts
 #custom
 /logs
 /src/uploads
-.baileys
-
-/src/generated/prisma
-
-/src/generated/prisma
+/src/docs
