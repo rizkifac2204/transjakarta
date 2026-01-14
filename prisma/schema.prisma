@@ -1,0 +1,406 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model admin {
+  id                 Int                  @id @default(autoincrement())
+  level_id           Int
+  nama               String?              @db.VarChar(50)
+  telp               String?              @db.Char(15)
+  alamat             String?              @db.Text
+  email              String?              @db.VarChar(100)
+  username           String               @db.VarChar(50)
+  password           String               @db.VarChar(225)
+  mfa_enabled        Boolean              @default(false)
+  mfa_secret         String?              @db.VarChar(100)
+  valid              Boolean              @default(false)
+  login              Boolean              @default(false)
+  foto               String?              @db.Text
+  last_access        DateTime?            @db.Timestamp(0)
+  created_at         DateTime?            @default(now()) @db.Timestamp(0)
+  updated_at         DateTime?            @db.Timestamp(0)
+  deleted_at         DateTime?            @db.Timestamp(0)
+  level              level                @relation(fields: [level_id], references: [id], onUpdate: NoAction, map: "admin_ibfk_1")
+  jawaban            jawaban[]
+  jawaban_penelitian jawaban_penelitian[]
+  keberatan          keberatan[]
+  penelitian         penelitian[]
+  permohonan         permohonan[]
+
+  @@index([level_id], map: "level_id")
+}
+
+model pemohon {
+  id              Int          @id @default(autoincrement())
+  email           String       @unique(map: "email") @db.VarChar(100)
+  nama            String       @db.VarChar(100)
+  nomor_identitas String?      @db.VarChar(50)
+  telp            String?      @db.VarChar(15)
+  jenis_kelamin   String?      @db.Char(10)
+  pekerjaan       String?      @db.VarChar(200)
+  alamat          String?      @db.Text
+  pendidikan      String?      @db.VarChar(200)
+  nim             String?      @db.VarChar(50)
+  universitas     String?      @db.VarChar(200)
+  jurusan         String?      @db.VarChar(200)
+  identitas       String?      @db.Text
+  foto            String?      @db.Text
+  username        String?      @db.VarChar(50)
+  password        String?      @db.VarChar(225)
+  register        Boolean?
+  login           Boolean?
+  last_access     DateTime?    @db.Timestamp(0)
+  created_at      DateTime     @default(now()) @db.Timestamp(0)
+  updated_at      DateTime?    @db.Timestamp(0)
+  deleted_at      DateTime?    @db.Timestamp(0)
+  keberatan       keberatan[]
+  penelitian      penelitian[]
+  permohonan      permohonan[]
+}
+
+model permohonan {
+  id             Int         @id @default(autoincrement())
+  admin_id       Int?
+  pemohon_id     Int?
+  no_regis       String?     @unique(map: "no_regis") @db.VarChar(100)
+  tiket          String?     @db.VarChar(15)
+  email          String?     @db.VarChar(100)
+  tipe           String?     @db.Char(7)
+  tanggal        DateTime?   @db.DateTime(0)
+  platform       String?     @db.Char(15)
+  rincian        String?     @db.Text
+  tujuan         String?     @db.Text
+  cara_dapat     String?     @db.VarChar(50)
+  cara_terima    String?     @db.VarChar(50)
+  file_pendukung String?     @db.Text
+  status         String?     @db.VarChar(100)
+  created_at     DateTime    @default(now()) @db.Timestamp(0)
+  updated_at     DateTime?   @db.Timestamp(0)
+  deleted_at     DateTime?   @db.Timestamp(0)
+  jawaban        jawaban[]
+  admin          admin?      @relation(fields: [admin_id], references: [id], onUpdate: NoAction, map: "permohonan_ibfk_2")
+  pemohon        pemohon?    @relation(fields: [pemohon_id], references: [id], onUpdate: NoAction, map: "permohonan_ibfk_3")
+  testimoni      testimoni[]
+
+  @@index([admin_id], map: "admin_id")
+  @@index([pemohon_id], map: "pemohon_id")
+}
+
+model level {
+  id    Int     @id
+  level String  @db.VarChar(30)
+  admin admin[]
+}
+
+model keberatan {
+  id              Int       @id @default(autoincrement())
+  admin_id        Int?
+  pemohon_id      Int?
+  no_regis        String?   @unique(map: "no_regis") @db.VarChar(100)
+  email           String?   @db.VarChar(100)
+  tanggal         DateTime? @db.DateTime(0)
+  nama            String?   @db.VarChar(100)
+  kategori        String?   @db.VarChar(20)
+  nomor_identitas String?   @db.VarChar(20)
+  telp            String?   @db.VarChar(15)
+  alamat          String?   @db.Text
+  alasan          String?   @db.Text
+  tujuan          String?   @db.Text
+  file_pendukung  String?   @db.Text
+  created_at      DateTime  @default(now()) @db.Timestamp(0)
+  updated_at      DateTime? @db.Timestamp(0)
+  deleted_at      DateTime? @db.Timestamp(0)
+  pemohon         pemohon?  @relation(fields: [pemohon_id], references: [id], onUpdate: NoAction, map: "keberatan_ibfk_1")
+  admin           admin?    @relation(fields: [admin_id], references: [id], onUpdate: NoAction, map: "keberatan_ibfk_2")
+
+  @@index([pemohon_id], map: "pemohon_id")
+  @@index([admin_id], map: "admin_id")
+}
+
+model jawaban {
+  id                       Int        @id @default(autoincrement())
+  admin_id                 Int?
+  permohonan_id            Int
+  jenis                    String?    @db.Char(20)
+  tanggal                  DateTime?  @db.DateTime(0)
+  pesan                    String?    @db.Text
+  penguasaan               String?    @db.VarChar(100)
+  bentuk_fisik             String?    @db.VarChar(10)
+  biaya                    Int?
+  penghitaman              String?    @db.VarChar(100)
+  jangka_waktu             Int?
+  pengecualian             String?    @db.VarChar(100)
+  pasal                    String?    @db.VarChar(100)
+  konsekuensi              String?    @db.VarChar(100)
+  file_surat_pemberitahuan String?    @db.Text
+  file_informasi           String?    @db.Text
+  mailed                   Boolean?
+  whatsapped               Boolean?
+  level_kepuasan           String?    @db.VarChar(20)
+  created_at               DateTime   @default(now()) @db.Timestamp(0)
+  updated_at               DateTime?  @db.Timestamp(0)
+  deleted_at               DateTime?  @db.Timestamp(0)
+  permohonan               permohonan @relation(fields: [permohonan_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "jawaban_ibfk_1")
+  admin                    admin?     @relation(fields: [admin_id], references: [id], onUpdate: NoAction, map: "jawaban_ibfk_2")
+
+  @@index([permohonan_id], map: "id_permohonan")
+  @@index([admin_id], map: "admin_id")
+}
+
+model peraturan {
+  id               Int               @id @default(autoincrement())
+  header_id        Int?
+  label            String?           @db.Text
+  link             String?           @db.Text
+  file             String?           @db.Text
+  created_at       DateTime          @default(now()) @db.Timestamp(0)
+  updated_at       DateTime?         @db.Timestamp(0)
+  deleted_at       DateTime?         @db.Timestamp(0)
+  peraturan_header peraturan_header? @relation(fields: [header_id], references: [id], onUpdate: NoAction, map: "peraturan_ibfk_1")
+
+  @@index([header_id], map: "header_id")
+}
+
+model dip {
+  id         Int         @id @default(autoincrement())
+  header_id  Int?
+  kategori   String      @db.VarChar(20)
+  label      String?     @db.Text
+  link       String?     @db.Text
+  file       String?     @db.Text
+  created_at DateTime    @default(now()) @db.Timestamp(0)
+  updated_at DateTime?   @db.Timestamp(0)
+  deleted_at DateTime?   @db.Timestamp(0)
+  dip_header dip_header? @relation(fields: [header_id], references: [id], onUpdate: NoAction, map: "dip_ibfk_1")
+
+  @@index([header_id], map: "header_id")
+}
+
+model dip_header {
+  id         Int       @id @default(autoincrement())
+  kategori   String    @db.VarChar(20)
+  label      String    @db.Text
+  created_at DateTime  @default(now()) @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  deleted_at DateTime? @db.Timestamp(0)
+  dip        dip[]
+}
+
+model instansi {
+  id          Int      @id @default(autoincrement())
+  nama        String   @db.VarChar(150)
+  kode        String?  @db.VarChar(50)
+  telp_1      String?  @db.VarChar(25)
+  telp_2      String?  @db.VarChar(25)
+  email       String?  @db.VarChar(100)
+  alamat      String?  @db.Text
+  website     String?  @db.VarChar(100)
+  facebook    String?  @db.VarChar(255)
+  twitter     String?  @db.VarChar(255)
+  instagram   String?  @db.VarChar(255)
+  youtube     String?  @db.VarChar(255)
+  tiktok      String?  @db.VarChar(255)
+  notif_wa    String?  @db.VarChar(20)
+  notif_email String?  @db.VarChar(100)
+  updated_at  DateTime @default(now()) @db.Timestamp(0)
+}
+
+model peraturan_header {
+  id         Int         @id @default(autoincrement())
+  label      String      @db.Text
+  created_at DateTime    @default(now()) @db.Timestamp(0)
+  updated_at DateTime?   @db.Timestamp(0)
+  deleted_at DateTime?   @db.Timestamp(0)
+  peraturan  peraturan[]
+}
+
+model laporan {
+  id             Int             @id @default(autoincrement())
+  header_id      Int?
+  kategori       String          @db.VarChar(50)
+  label          String?         @db.Text
+  link           String?         @db.Text
+  file           String?         @db.Text
+  created_at     DateTime        @default(now()) @db.Timestamp(0)
+  updated_at     DateTime?       @db.Timestamp(0)
+  deleted_at     DateTime?       @db.Timestamp(0)
+  laporan_header laporan_header? @relation(fields: [header_id], references: [id], onUpdate: NoAction, map: "laporan_ibfk_1")
+
+  @@index([header_id], map: "header_id")
+}
+
+model laporan_header {
+  id         Int       @id @default(autoincrement())
+  kategori   String    @db.VarChar(50)
+  label      String    @db.Text
+  created_at DateTime  @default(now()) @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  deleted_at DateTime? @db.Timestamp(0)
+  laporan    laporan[]
+}
+
+model halaman {
+  id         Int       @id @default(autoincrement())
+  slug       String    @unique(map: "slug") @db.VarChar(100)
+  judul      String?   @db.VarChar(255)
+  isi        String    @db.LongText
+  created_at DateTime  @default(now()) @db.DateTime(0)
+  updated_at DateTime? @db.DateTime(0)
+}
+
+model testimoni {
+  id            Int         @id @default(autoincrement())
+  permohonan_id Int?
+  penelitian_id Int?
+  tiket         String      @db.VarChar(15)
+  email         String      @db.VarChar(100)
+  rating        Int
+  komentar      String?     @db.Text
+  inslide       Boolean?
+  created_at    DateTime    @default(now()) @db.Timestamp(0)
+  permohonan    permohonan? @relation(fields: [permohonan_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "testimoni_ibfk_1")
+  penelitian    penelitian? @relation(fields: [penelitian_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "testimoni_ibfk_2")
+
+  @@unique([tiket, email], map: "unique_tiket_email")
+  @@index([permohonan_id], map: "permohonan_id")
+  @@index([penelitian_id], map: "penelitian_id")
+}
+
+model slider {
+  id         Int       @id @default(autoincrement())
+  judul      String    @db.VarChar(255)
+  deskripsi  String?   @db.Text
+  file       String?   @db.VarChar(255)
+  link       String?   @db.VarChar(255)
+  urutan     Int?      @default(0)
+  is_active  Boolean?  @default(true)
+  created_at DateTime? @default(now()) @db.DateTime(0)
+}
+
+model jawaban_penelitian {
+  id                       Int        @id @default(autoincrement())
+  admin_id                 Int?
+  penelitian_id            Int
+  jenis                    String?    @db.Char(20)
+  tanggal                  DateTime?  @db.DateTime(0)
+  pesan                    String?    @db.Text
+  file_surat_pemberitahuan String?    @db.Text
+  file_informasi           String?    @db.Text
+  mailed                   Boolean?
+  whatsapped               Boolean?
+  level_kepuasan           String?    @db.VarChar(20)
+  created_at               DateTime   @default(now()) @db.Timestamp(0)
+  updated_at               DateTime?  @db.Timestamp(0)
+  deleted_at               DateTime?  @db.Timestamp(0)
+  admin                    admin?     @relation(fields: [admin_id], references: [id], onUpdate: NoAction, map: "jawaban_penelitian_ibfk_1")
+  penelitian               penelitian @relation(fields: [penelitian_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "jawaban_penelitian_ibfk_2")
+
+  @@index([admin_id], map: "admin_id")
+  @@index([penelitian_id], map: "id_permohonan")
+}
+
+model penelitian {
+  id                 Int                  @id @default(autoincrement())
+  admin_id           Int?
+  pemohon_id         Int?
+  no_regis           String?              @unique(map: "unique_no_regis") @db.VarChar(100)
+  tiket              String?              @db.VarChar(15)
+  email              String?              @db.VarChar(100)
+  tipe               String?              @db.VarChar(20)
+  tanggal            DateTime?            @db.DateTime(0)
+  platform           String?              @db.Char(15)
+  judul              String?              @db.VarChar(255)
+  tujuan             String?              @db.Text
+  file_permohonan    String?              @db.Text
+  file_proposal      String?              @db.Text
+  file_pertanyaan    String?              @db.Text
+  status             String?              @db.VarChar(100)
+  created_at         DateTime             @default(now()) @db.Timestamp(0)
+  updated_at         DateTime?            @db.Timestamp(0)
+  deleted_at         DateTime?            @db.Timestamp(0)
+  jawaban_penelitian jawaban_penelitian[]
+  admin              admin?               @relation(fields: [admin_id], references: [id], onUpdate: NoAction, map: "penelitian_ibfk_1")
+  pemohon            pemohon?             @relation(fields: [pemohon_id], references: [id], onUpdate: NoAction, map: "penelitian_ibfk_2")
+  testimoni          testimoni[]
+
+  @@index([admin_id], map: "admin_id")
+  @@index([pemohon_id], map: "pemohon_id")
+}
+
+model ukpbj_informasi {
+  id                             Int                             @id @default(autoincrement())
+  header_sub_sub_id              Int?
+  label                          String?                         @db.Text
+  link                           String?                         @db.Text
+  file                           String?                         @db.Text
+  created_at                     DateTime                        @default(now()) @db.Timestamp(0)
+  updated_at                     DateTime?                       @db.Timestamp(0)
+  deleted_at                     DateTime?                       @db.Timestamp(0)
+  ukpbj_informasi_header_sub_sub ukpbj_informasi_header_sub_sub? @relation(fields: [header_sub_sub_id], references: [id], onUpdate: NoAction, map: "ukpbj_informasi_ibfk_1")
+
+  @@index([header_sub_sub_id], map: "header_id")
+}
+
+model ukpbj_informasi_header {
+  id                         Int                          @id @default(autoincrement())
+  label                      String                       @db.Text
+  created_at                 DateTime                     @default(now()) @db.Timestamp(0)
+  updated_at                 DateTime?                    @db.Timestamp(0)
+  deleted_at                 DateTime?                    @db.Timestamp(0)
+  ukpbj_informasi_header_sub ukpbj_informasi_header_sub[]
+}
+
+model ukpbj_regulasi {
+  id                    Int                    @id @default(autoincrement())
+  header_id             Int?
+  label                 String?                @db.Text
+  link                  String?                @db.Text
+  file                  String?                @db.Text
+  created_at            DateTime               @default(now()) @db.Timestamp(0)
+  updated_at            DateTime?              @db.Timestamp(0)
+  deleted_at            DateTime?              @db.Timestamp(0)
+  ukpbj_regulasi_header ukpbj_regulasi_header? @relation(fields: [header_id], references: [id], onUpdate: NoAction, map: "ukpbj_regulasi_ibfk_1")
+
+  @@index([header_id], map: "header_id")
+}
+
+model ukpbj_regulasi_header {
+  id             Int              @id @default(autoincrement())
+  label          String           @db.Text
+  created_at     DateTime         @default(now()) @db.Timestamp(0)
+  updated_at     DateTime?        @db.Timestamp(0)
+  deleted_at     DateTime?        @db.Timestamp(0)
+  ukpbj_regulasi ukpbj_regulasi[]
+}
+
+model ukpbj_informasi_header_sub {
+  id                             Int                              @id @default(autoincrement())
+  header_id                      Int?
+  label                          String                           @db.Text
+  created_at                     DateTime                         @default(now()) @db.Timestamp(0)
+  updated_at                     DateTime?                        @db.Timestamp(0)
+  deleted_at                     DateTime?                        @db.Timestamp(0)
+  ukpbj_informasi_header         ukpbj_informasi_header?          @relation(fields: [header_id], references: [id], onUpdate: NoAction, map: "ukpbj_informasi_header_sub_ibfk_1")
+  ukpbj_informasi_header_sub_sub ukpbj_informasi_header_sub_sub[]
+
+  @@index([header_id], map: "header_id")
+}
+
+model ukpbj_informasi_header_sub_sub {
+  id                         Int                         @id @default(autoincrement())
+  header_sub_id              Int?
+  label                      String                      @db.Text
+  created_at                 DateTime                    @default(now()) @db.Timestamp(0)
+  updated_at                 DateTime?                   @db.Timestamp(0)
+  deleted_at                 DateTime?                   @db.Timestamp(0)
+  ukpbj_informasi            ukpbj_informasi[]
+  ukpbj_informasi_header_sub ukpbj_informasi_header_sub? @relation(fields: [header_sub_id], references: [id], onUpdate: NoAction, map: "ukpbj_informasi_header_sub_sub_ibfk_1")
+
+  @@index([header_sub_id], map: "header_id")
+}

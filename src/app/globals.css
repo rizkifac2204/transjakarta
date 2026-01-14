@@ -1,0 +1,99 @@
+.react-datepicker-wrapper {
+  width: 100% !important;
+}
+
+.ql-editor {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Styling dasar agar hasil dari Quill tetap terlihat rapi */
+.ql-editor-style {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: #1f2937; /* slate-800 */
+}
+
+/* Untuk mereset background dan warna inline span */
+.ql-editor-style span {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+/* Alignment bawaan Quill */
+.ql-editor-style .ql-align-center {
+  text-align: center;
+}
+.ql-editor-style .ql-align-right {
+  text-align: right;
+}
+.ql-editor-style .ql-align-left {
+  text-align: left;
+}
+.ql-editor-style .ql-align-justify {
+  text-align: justify;
+}
+
+/* Header styling (h1 - h6) */
+.ql-editor-style h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.ql-editor-style h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.ql-editor-style h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.ql-editor-style h4,
+.ql-editor-style h5,
+.ql-editor-style h6 {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Paragraph */
+.ql-editor-style p {
+  margin-bottom: 1rem;
+}
+
+/* List style */
+.ql-editor-style ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+.ql-editor-style ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Blockquote */
+.ql-editor-style blockquote {
+  border-left: 4px solid #d1d5db; /* slate-300 */
+  padding-left: 1rem;
+  color: #6b7280; /* slate-500 */
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+/* Image */
+.ql-editor-style img {
+  display: block;
+  margin: 1rem auto;
+  height: auto;
+  width: 100%; /* default untuk layar kecil (hp) */
+  max-width: 100%;
+}
+
+@media (min-width: 768px) {
+  .ql-editor-style img {
+    width: 70%; /* layar lebih lebar, misalnya tablet/desktop */
+  }
+}
