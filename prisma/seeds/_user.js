@@ -1,4 +1,4 @@
-// prisma/seeds/_users.js
+// prisma/seeds/_user.js
 
 import bcrypt from "bcryptjs";
 
@@ -7,7 +7,7 @@ export async function main(prisma) {
 
   const hashedPassword = await bcrypt.hash("@Loremit123", 10);
 
-  await prisma.users.upsert({
+  await prisma.user.upsert({
     where: { username: "developer" },
     update: {},
     create: {

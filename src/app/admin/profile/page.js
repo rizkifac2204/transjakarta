@@ -47,7 +47,7 @@ async function Profile() {
               {profile?._count?.permohonan || "0"}
             </div>
             <div className="text-sm text-slate-600 font-light dark:text-slate-300">
-              Handle Permohonan
+              Survey Armada
             </div>
           </div>
 
@@ -56,7 +56,7 @@ async function Profile() {
               {profile?._count?.keberatan || "0"}
             </div>
             <div className="text-sm text-slate-600 font-light dark:text-slate-300">
-              Handle Keberatan
+              Survet Halte
             </div>
           </div>
 
@@ -65,7 +65,7 @@ async function Profile() {
               {profile?._count?.penelitian || "0"}
             </div>
             <div className="text-sm text-slate-600 font-light dark:text-slate-300">
-              Handle Penelitian
+              Survey Headway
             </div>
           </div>
         </div>

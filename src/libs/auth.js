@@ -3,7 +3,7 @@ import { verifyAuth } from "./jwt";
 
 // jika ada id, ambil selain data dengan id tersebut
 export async function getAuthByUsername(username, id) {
-  const data = await prisma.users.findMany({
+  const data = await prisma.user.findMany({
     where: {
       username,
       ...(id && {
@@ -15,7 +15,7 @@ export async function getAuthByUsername(username, id) {
 }
 
 export async function editAuthAfterLogin(id) {
-  const data = await prisma.users.update({
+  const data = await prisma.user.update({
     where: { id: parseInt(id) },
     data: { last_access: null, login: true },
   });
@@ -23,7 +23,7 @@ export async function editAuthAfterLogin(id) {
 }
 
 export async function editAuthAfterLogout(id) {
-  const data = await prisma.users.update({
+  const data = await prisma.user.update({
     where: { id: parseInt(id) },
     data: { last_access: new Date(), login: false },
   });
@@ -32,7 +32,7 @@ export async function editAuthAfterLogout(id) {
 
 export async function getSession() {
   const session = await verifyAuth();
-  const data = await prisma.users.findUnique({
+  const data = await prisma.user.findUnique({
     where: { id: parseInt(session.id), login: true },
     include: {
       level: true,

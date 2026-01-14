@@ -52,7 +52,7 @@ const Info = ({ user }) => {
             <Link href={`/admin/permohonan?q=${encodeId(user.id)}`}>
               <div className="flex space-x-2 items-start rtl:space-x-reverse">
                 <Icon icon="solar:database-broken" />
-                <span>Handle Permohonan</span>
+                <span>Survey Armada</span>
               </div>
             </Link>
             <div className="font-medium">{user?._count?.permohonan || "0"}</div>
@@ -62,7 +62,7 @@ const Info = ({ user }) => {
             <Link href={`/admin/keberatan?q=${encodeId(user.id)}`}>
               <div className="flex space-x-2 items-start rtl:space-x-reverse">
                 <Icon icon="solar:feed-broken" />
-                <span>Handle Keberatan</span>
+                <span>Survey Halte</span>
               </div>
             </Link>
             <div className="font-medium">{user?._count?.keberatan || "0"}</div>
@@ -72,7 +72,7 @@ const Info = ({ user }) => {
             <Link href={`/admin/penelitian?q=${encodeId(user.id)}`}>
               <div className="flex space-x-2 items-start rtl:space-x-reverse">
                 <Icon icon="solar:square-academic-cap-2-broken" />
-                <span>Handle Penelitian</span>
+                <span>Survey Headway</span>
               </div>
             </Link>
             <div className="font-medium">{user?._count?.penelitian || "0"}</div>

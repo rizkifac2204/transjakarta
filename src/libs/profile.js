@@ -8,7 +8,7 @@ export async function getProfile() {
 
 export async function getProfileOnly() {
   const auth = await verifyAuth();
-  const data = await prisma.users.findUnique({
+  const data = await prisma.user.findUnique({
     where: { id: auth.id },
     include: { level: true },
   });
@@ -18,14 +18,14 @@ export async function getProfileOnly() {
 
 export async function isEmailSama(email) {
   const auth = await verifyAuth();
-  const data = await prisma.users.findFirst({
+  const data = await prisma.user.findFirst({
     where: { id: { not: auth.id }, email: email },
   });
   return data;
 }
 
 export async function updateProfile(id, data) {
-  return prisma.users.update({
+  return prisma.user.update({
     where: { id },
     data,
   });

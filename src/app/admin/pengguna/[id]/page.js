@@ -59,7 +59,7 @@ async function UserDetailPage({ params }) {
                 {pengguna?._count?.permohonan || "0"}
               </div>
               <div className="text-sm text-slate-600 font-light dark:text-slate-300">
-                Handle Permohonan
+                Data Survey Armada
               </div>
             </Link>
           </div>
@@ -70,7 +70,7 @@ async function UserDetailPage({ params }) {
                 {pengguna?._count?.keberatan || "0"}
               </div>
               <div className="text-sm text-slate-600 font-light dark:text-slate-300">
-                Handle Keberatan
+                Data Survey Halte
               </div>
             </Link>
           </div>
@@ -81,7 +81,7 @@ async function UserDetailPage({ params }) {
                 {pengguna?._count?.penelitian || "0"}
               </div>
               <div className="text-sm text-slate-600 font-light dark:text-slate-300">
-                Handle Penelitian
+                Data Survey Headway
               </div>
             </Link>
           </div>
