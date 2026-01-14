@@ -1,7 +1,6 @@
 import { verifyAuth } from "@/libs/jwt";
 import getLogs from "@/libs/getLogs";
-import { getAdminDetailById, updateAdmin } from "@/libs/user";
-import { canManage } from "@/utils/manage";
+import { getUserById, updateUser } from "@/libs/user";
 import { MIME_PRESETS } from "@/utils/mimePresets";
 import { isValidFile } from "@/utils/existAndValidFile";
 import { MAX_FOTO_SIZE, PATH_UPLOAD } from "@/configs/appConfig";
@@ -19,26 +18,19 @@ export async function POST(request, { params }) {
     const { id } = await params;
     const parsedId = parseInt(id);
     if (!id || isNaN(parsedId)) {
-      return Response.json(
-        { message: "ID tidak valid", error: "InvalidID" },
-        { status: 400 }
-      );
+      return Response.json({ message: "ID tidak valid" }, { status: 400 });
     }
 
-    const pengguna = await getAdminDetailById(parsedId);
+    const pengguna = await getUserById(parsedId);
     if (!pengguna) {
       return Response.json(
-        { message: "Data tidak ditemukan", error: "NotFound" },
+        { message: "Data tidak ditemukan" },
         { status: 404 }
       );
     }
 
-    const isManage = canManage(pengguna.level_id, auth.level);
-    if (!isManage) {
-      return Response.json(
-        { message: "Keterbatasan Akses", error: "Access" },
-        { status: 400 }
-      );
+    if (pengguna.level_id < auth.level) {
+      return Response.json({ message: "Keterbatasan Akses" }, { status: 403 });
     }
 
     const formData = await request.formData();
@@ -55,7 +47,7 @@ export async function POST(request, { params }) {
     let resultUpload = await uploadServices(foto, {
       allowedTypes: [...MIME_PRESETS.image],
       maxSize: MAX_FOTO_SIZE,
-      folder: PATH_UPLOAD.admin,
+      folder: PATH_UPLOAD.user,
     });
 
     if (!resultUpload.success) {
@@ -71,8 +63,8 @@ export async function POST(request, { params }) {
       updated_at: new Date(),
       foto: resultUpload.files[0].filename,
     };
-    await updateAdmin(parsedId, updateData);
-    if (pengguna?.foto) await hapusFile(pengguna?.foto, PATH_UPLOAD.admin);
+    await updateUser(parsedId, updateData);
+    if (pengguna?.foto) await hapusFile(pengguna?.foto, PATH_UPLOAD.user);
 
     return Response.json({ message: "Berhasil memproses foto" });
   } catch (error) {
@@ -94,34 +86,28 @@ export async function DELETE(_request, { params }) {
     const { id } = await params;
     const parsedId = parseInt(id);
     if (!id || isNaN(parsedId)) {
-      return Response.json(
-        { message: "ID tidak valid", error: "InvalidID" },
-        { status: 400 }
-      );
+      return Response.json({ message: "ID tidak valid" }, { status: 400 });
     }
 
-    const pengguna = await getAdminDetailById(parsedId);
+    const pengguna = await getUserById(parsedId);
     if (!pengguna) {
       return Response.json(
-        { message: "Data tidak ditemukan", error: "NotFound" },
+        { message: "Data tidak ditemukan" },
         { status: 404 }
       );
     }
 
     const isManage = canManage(pengguna.level_id, auth.level);
-    if (!isManage) {
-      return Response.json(
-        { message: "Keterbatasan Akses", error: "Access" },
-        { status: 400 }
-      );
+    if (pengguna.level_id < auth.level) {
+      return Response.json({ message: "Keterbatasan Akses" }, { status: 403 });
     }
 
     const updateData = {
       updated_at: new Date(),
       foto: null,
     };
-    await hapusFile(pengguna?.foto, PATH_UPLOAD.admin);
-    await updateAdmin(parsedId, updateData);
+    await hapusFile(pengguna?.foto, PATH_UPLOAD.user);
+    await updateUser(parsedId, updateData);
 
     return Response.json({ message: "Berhasil menghapus foto" });
   } catch (error) {

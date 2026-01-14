@@ -12,7 +12,7 @@ export const metadata = {
 
 async function UserAddPage() {
   const auth = await verifyAuth();
-  if (auth?.level > 2) notFound();
+  if (auth?.level > 3) notFound();
   const level = await getLevel();
   const filteredLevel = level?.filter((item) => item.id > auth.level);
 

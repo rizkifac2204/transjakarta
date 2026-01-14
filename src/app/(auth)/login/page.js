@@ -10,9 +10,9 @@ export default async function Login() {
           <div className="left-column relative z-[1]">
             <div className="max-w-[520px] pt-20 ltr:pl-20 rtl:pr-20">
               <h4>
-                PPID{" "}
+                SURVEY{" "}
                 <span className="text-slate-800 dark:text-slate-400 font-bold">
-                  KP2MI
+                  TRANSJAKARTA
                 </span>
               </h4>
             </div>

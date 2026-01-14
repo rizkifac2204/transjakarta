@@ -1,7 +1,10 @@
 import speakeasy from "speakeasy";
 import { updateProfile } from "@/libs/profile";
 
-export async function getOrCreateMfaSecret(user, issuer = "PPID KP2MI") {
+export async function getOrCreateMfaSecret(
+  user,
+  issuer = "Survey Transjakarta"
+) {
   let secret;
 
   if (user.mfa_secret) {
@@ -34,7 +37,7 @@ export async function getOrCreateMfaSecret(user, issuer = "PPID KP2MI") {
   return secret;
 }
 
-export function generateMfaSecret(label, issuer = "PPID KP2MI") {
+export function generateMfaSecret(label, issuer = "Survey Transjakarta") {
   return speakeasy.generateSecret({
     name: label,
     issuer,

@@ -3,8 +3,7 @@ import { parseFormData } from "@/utils/parseFormData";
 import getLogs from "@/libs/getLogs";
 import bcrypt from "bcryptjs";
 import { getAuthByUsername } from "@/libs/auth";
-import { createAdmin, getAdminDetailByEmail } from "@/libs/user";
-import { canManage } from "@/utils/manage";
+import { createUser, getUserDetailByEmail } from "@/libs/user";
 import { isValidFile } from "@/utils/existAndValidFile";
 import { MIME_PRESETS } from "@/utils/mimePresets";
 import uploadServices, {
@@ -14,31 +13,6 @@ import { PATH_UPLOAD, MAX_FOTO_SIZE } from "@/configs/appConfig";
 import { validateStrongPassword } from "@/utils/strongPassword";
 
 export const dynamic = "force-dynamic";
-
-// export async function GET() {
-//   try {
-//     const auth = await verifyAuth();
-//     const data = await getAdmin();
-
-//     const modifiedData = data?.map((admin) => {
-//       return {
-//         ...admin,
-//         isManage: canManage(admin.level_id, auth.level),
-//       };
-//     });
-
-//     return Response.json(modifiedData);
-//   } catch (error) {
-//     getLogs("pengguna").error(error);
-//     return Response.json(
-//       {
-//         message: "Terjadi Kesalahan",
-//         error: error instanceof Error ? error.message : error,
-//       },
-//       { status: error.status || 500 }
-//     );
-//   }
-// }
 
 export async function POST(request) {
   let uploadedFiles = [];
@@ -63,31 +37,20 @@ export async function POST(request) {
       return Response.json({ message: isStrong }, { status: 400 });
     }
 
-    // hash password
-    const salt = bcrypt.genSaltSync(10);
-    const hashBaru = bcrypt.hashSync(password, salt);
-
     // management level
-    const isManage = canManage(level_id, auth.level);
-    if (!isManage) {
+    if (level_id < auth.level) {
       return Response.json(
-        {
-          message: "Tidak Bisa Input Dengan Level Lebih Tinggi",
-          error: "Access",
-        },
+        { message: "Tidak Bisa Input Dengan Level Lebih Tinggi" },
         { status: 400 }
       );
     }
 
     // check email sama
     if (email) {
-      const othersAdmin = await getAdminDetailByEmail(String(email));
+      const othersAdmin = await getUserDetailByEmail(String(email));
       if (othersAdmin) {
         return Response.json(
-          {
-            message: "Email Sudah Digunakan Oleh Admin Lain, Mohon Ganti",
-            error: "Required",
-          },
+          { message: "Email Sudah Digunakan Oleh Admin Lain, Mohon Ganti" },
           { status: 400 }
         );
       }
@@ -98,7 +61,6 @@ export async function POST(request) {
     if (entries && entries.length !== 0) {
       return Response.json(
         {
-          status: "error",
           message:
             "Username Sudah Digunakan Pengguna Lain, Mohon Ganti Demi Keamanan",
         },
@@ -114,7 +76,7 @@ export async function POST(request) {
       resultFoto = await uploadServices(foto, {
         allowedTypes: [...MIME_PRESETS.image],
         maxSize: MAX_FOTO_SIZE,
-        folder: PATH_UPLOAD.admin,
+        folder: PATH_UPLOAD.user,
       });
 
       if (!resultFoto.success) {
@@ -127,8 +89,12 @@ export async function POST(request) {
 
     uploadedFiles = [resultFoto];
 
+    // hash password
+    const salt = bcrypt.genSaltSync(10);
+    const hashBaru = bcrypt.hashSync(password, salt);
+
     // create
-    const createdAdmin = await createAdmin({
+    const createdAdmin = await createUser({
       level_id,
       nama,
       telp,
@@ -143,12 +109,11 @@ export async function POST(request) {
     return Response.json(
       {
         message: "Berhasil Menambah Data",
-        data: createdAdmin,
+        payload: createdAdmin,
       },
       { status: 201 }
     );
   } catch (error) {
-    console.log(error);
     await hapusFileYangSudahTerupload(uploadedFiles);
     getLogs("pengguna").error(error);
     return Response.json(

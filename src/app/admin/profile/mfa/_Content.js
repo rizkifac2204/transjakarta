@@ -38,7 +38,7 @@ function ProfileMfaContent({ secret }) {
 
   async function onSubmit(data) {
     try {
-      const res = await axios.post(`/api/mfa`, { token: data.otp });
+      const res = await axios.post(`/api/profile/mfa`, { token: data.otp });
       toast.success(res?.data?.message || "Berhasil");
       router.refresh();
     } catch (error) {

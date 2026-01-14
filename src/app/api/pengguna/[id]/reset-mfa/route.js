@@ -1,7 +1,6 @@
 import { verifyAuth } from "@/libs/jwt";
-import { canManage } from "@/utils/manage";
 import getLogs from "@/libs/getLogs";
-import { getAdminDetailById, updateAdmin } from "@/libs/user";
+import { getUserById, updateUser } from "@/libs/user";
 
 export async function PATCH(request, { params }) {
   try {
@@ -9,14 +8,11 @@ export async function PATCH(request, { params }) {
     const { id } = await params;
     const parsedId = parseInt(id);
     if (!id || isNaN(parsedId)) {
-      return Response.json(
-        { message: "ID tidak valid", error: "InvalidID" },
-        { status: 400 }
-      );
+      return Response.json({ message: "ID tidak valid" }, { status: 400 });
     }
 
     // Cek apakah pemohon dengan ID tersebut ada
-    const penggunalama = await getAdminDetailById(parsedId);
+    const penggunalama = await getUserById(parsedId);
     if (!penggunalama) {
       return Response.json(
         { message: "Pengguna tidak ditemukan", error: "NotFound" },
@@ -24,18 +20,14 @@ export async function PATCH(request, { params }) {
       );
     }
 
-    const isManage = canManage(penggunalama.level_id, auth.level);
-    if (!isManage) {
+    if (penggunalama.level_id < auth.level) {
       return Response.json(
-        {
-          message: "Tidak Bisa Edit Dengan Level Lebih Tinggi",
-          error: "Access",
-        },
-        { status: 400 }
+        { message: "Tidak Bisa Edit Dengan Level Lebih Tinggi" },
+        { status: 403 }
       );
     }
 
-    const updated = await updateAdmin(parsedId, {
+    await updateUser(parsedId, {
       mfa_enabled: false,
       mfa_secret: null,
       updated_at: new Date(),
@@ -43,7 +35,6 @@ export async function PATCH(request, { params }) {
 
     return Response.json({ message: "Berhasil reset mfa" });
   } catch (error) {
-    console.log(error);
     getLogs("pengguna").error(error);
     return Response.json(
       {

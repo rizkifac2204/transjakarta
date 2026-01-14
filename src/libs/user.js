@@ -1,7 +1,7 @@
 import prisma from "./prisma";
 
 export async function getAllUser() {
-  return prisma.user.findMany({
+  return prisma.users.findMany({
     where: {
       NOT: { id: 1 },
     },

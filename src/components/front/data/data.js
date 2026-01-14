@@ -117,7 +117,7 @@ export const MEDIA_LAYANAN = [
   {
     link: "/media-layanan/call-center",
     icon: "solar:call-chat-broken",
-    label: "Call Center KP2MI",
+    label: "Call Center",
   },
 ];
 export const LINK_MEDIA_LAYANAN = MEDIA_LAYANAN.map((item) => item.link);

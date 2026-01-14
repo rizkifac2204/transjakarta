@@ -40,7 +40,7 @@ export const EXCEL_TYPES = ["xls", "xlsx"];
 export const DOC_TYPES = [...PDF_TYPES, ...WORD_TYPES, ...EXCEL_TYPES];
 export const PATH_UPLOAD = {
   admin: "admin",
-  identitas: "identitas",
+  user: "user",
 };
 export const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25 MB = 26_214_400 byte
 export const MAX_FOTO_SIZE = 10 * 1024 * 1024; // 10 MB = 10_485_760 byte

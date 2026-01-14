@@ -1,8 +1,7 @@
 import React from "react";
-import { getAdminDetailById } from "@/libs/user";
+import { getUserById } from "@/libs/user";
 import { notFound } from "next/navigation";
 import { verifyAuth } from "@/libs/jwt";
-import { canManage } from "@/utils/manage";
 import { redirect } from "next/navigation";
 import ActionFotoPengguna from "./_ActionFotoPengguna";
 import ActionPengguna from "./_ActionPengguna";
@@ -16,10 +15,13 @@ import { encodeId } from "@/libs/hash/hashId";
 async function UserDetailPage({ params }) {
   const auth = await verifyAuth();
   const id = decodeOrNotFound(params.id);
-  const data = await getAdminDetailById(id);
+  const data = await getUserById(id);
   if (!data) notFound();
 
-  const pengguna = { ...data, isManage: canManage(data?.level_id, auth.level) };
+  const pengguna = {
+    ...data,
+    isManage: data?.level_id > auth.level,
+  };
 
   if (Number(id) === Number(auth.id)) {
     redirect("/admin/profile");

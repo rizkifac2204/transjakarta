@@ -26,7 +26,9 @@ export default async function Footer() {
                 />
               </div>
               <div className="footerText">
-                <p>© {new Date().getFullYear()} KP2MI. All rights reserved</p>
+                <p>
+                  © {new Date().getFullYear()} Transjakarta. All rights reserved
+                </p>
               </div>
               <div className="footerSocialwrap">
                 <ul className="footersocial">

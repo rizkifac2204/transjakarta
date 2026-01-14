@@ -1,6 +1,6 @@
 import Hashids from "hashids";
 
-const SALT = process.env.HASHID_SALT || "kp2mi-ppid-secret-hash-id";
+const SALT = process.env.HASHID_SALT || "survey-transjakarta-secret-hash-id";
 const LENGTH = 10; // panjang minimal hasil hash
 
 const hashids = new Hashids(SALT, LENGTH);

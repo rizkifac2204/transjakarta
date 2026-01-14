@@ -1,14 +1,13 @@
 import { verifyAuth } from "@/libs/jwt";
-import { canManage } from "@/utils/manage";
 import getLogs from "@/libs/getLogs";
 import { parseFormData } from "@/utils/parseFormData";
 import { getAuthByUsername } from "@/libs/auth";
 import bcrypt from "bcryptjs";
 import {
-  getAdminDetailById,
-  getAdminDetailByEmail,
-  updateAdmin,
-  deleteAdmin,
+  getUserById,
+  getUserDetailByEmail,
+  updateUser,
+  deleteUser,
 } from "@/libs/user";
 import { isValidFile } from "@/utils/existAndValidFile";
 import { MIME_PRESETS } from "@/utils/mimePresets";
@@ -31,10 +30,10 @@ export async function GET(_request, { params }) {
       );
     }
 
-    const data = await getAdminDetailById(parsedId);
+    const data = await getUserById(parsedId);
     const modifiedData = {
       ...data,
-      isManage: canManage(data.level_id, auth.level),
+      isManage: data.level_id > auth.level,
     };
 
     return Response.json(modifiedData);
@@ -78,21 +77,17 @@ export async function PATCH(request, { params }) {
       status_foto,
     } = parsed;
 
-    const isManage = canManage(level_id, auth.level);
-    if (!isManage) {
+    if (auth.level > level_id) {
       return Response.json(
-        {
-          message: "Tidak Bisa Edit Dengan Level Lebih Tinggi",
-          error: "Access",
-        },
-        { status: 400 }
+        { message: "Tidak Bisa Edit Dengan Level Lebih Tinggi" },
+        { status: 403 }
       );
     }
 
     // Cek validasi input minimal, bisa disesuaikan
     if (!level_id || !nama || !username) {
       return Response.json(
-        { message: "Lengkapi semua field yang harus diisi", error: "Required" },
+        { message: "Lengkapi semua field yang harus diisi" },
         { status: 400 }
       );
     }
@@ -101,10 +96,7 @@ export async function PATCH(request, { params }) {
     if (status_password == "change") {
       if (!password) {
         return Response.json(
-          {
-            message: "Lengkapi semua field yang harus diisi",
-            error: "Required",
-          },
+          { message: "Lengkapi semua field yang harus diisi" },
           { status: 400 }
         );
       }
@@ -119,23 +111,20 @@ export async function PATCH(request, { params }) {
     const hashBaru = bcrypt.hashSync(password || "-", salt);
 
     // Cek apakah pemohon dengan ID tersebut ada
-    const penggunalama = await getAdminDetailById(parsedId);
+    const penggunalama = await getUserById(parsedId);
     if (!penggunalama) {
       return Response.json(
-        { message: "Pengguna tidak ditemukan", error: "NotFound" },
+        { message: "Pengguna tidak ditemukan" },
         { status: 404 }
       );
     }
 
     // Cek apakah email sudah terdaftar
     if (email) {
-      const othersAdmin = await getAdminDetailByEmail(String(email), parsedId);
+      const othersAdmin = await getUserDetailByEmail(String(email), parsedId);
       if (othersAdmin) {
         return Response.json(
-          {
-            message: "Email Sudah Digunakan Oleh Admin Lain, Mohon Ganti",
-            error: "Required",
-          },
+          { message: "Email Sudah Digunakan Oleh Admin Lain, Mohon Ganti" },
           { status: 400 }
         );
       }
@@ -146,7 +135,6 @@ export async function PATCH(request, { params }) {
     if (entries && entries.length !== 0) {
       return Response.json(
         {
-          status: "error",
           message:
             "Username Sudah Digunakan Pengguna Lain, Mohon Ganti Demi Keamanan",
         },
@@ -159,7 +147,7 @@ export async function PATCH(request, { params }) {
 
     // jika request delete
     if (status_foto === "delete" && penggunalama?.foto) {
-      await hapusFile(penggunalama.foto, PATH_UPLOAD.admin);
+      await hapusFile(penggunalama.foto, PATH_UPLOAD.user);
       filenameFotoBaru = null; // set file baru menjadi null
     }
     // jika request change
@@ -167,13 +155,13 @@ export async function PATCH(request, { params }) {
       if (isValidFile(foto)) {
         // hapus file identitas lama jika ada
         if (penggunalama?.foto)
-          await hapusFile(penggunalama.foto, PATH_UPLOAD.admin);
+          await hapusFile(penggunalama.foto, PATH_UPLOAD.user);
 
         // upload file identitas baru
         const resultFoto = await uploadServices(foto, {
           allowedTypes: [...MIME_PRESETS.image],
           maxSize: MAX_FOTO_SIZE,
-          folder: PATH_UPLOAD.admin,
+          folder: PATH_UPLOAD.user,
         });
 
         if (!resultFoto.success) {
@@ -207,14 +195,13 @@ export async function PATCH(request, { params }) {
       updateData.password = hashBaru;
     }
 
-    const updated = await updateAdmin(parsedId, updateData);
+    const updated = await updateUser(parsedId, updateData);
 
     return Response.json({
       message: "Berhasil mengupdate data",
-      data: updated,
+      payload: updated,
     });
   } catch (error) {
-    console.log(error);
     getLogs("pengguna").error(error);
     await hapusFileYangSudahTerupload(uploadedFiles);
     return Response.json(
@@ -239,33 +226,29 @@ export async function DELETE(_request, { params }) {
       );
     }
 
-    const penggunalama = await getAdminDetailById(parsedId);
+    const penggunalama = await getUserById(parsedId);
     if (!penggunalama) {
       return Response.json(
-        { message: "Pemohon tidak ditemukan", error: "NotFound" },
+        { message: "Pemohon tidak ditemukan" },
         { status: 404 }
       );
     }
 
-    const isManage = canManage(penggunalama.level_id, auth.level);
-    if (!isManage) {
+    if (auth.level > penggunalama.level_id) {
       return Response.json(
-        {
-          message: "Tidak Bisa Input Dengan Level Lebih Tinggi",
-          error: "Access",
-        },
-        { status: 400 }
+        { message: "Tidak Bisa Input Dengan Level Lebih Tinggi" },
+        { status: 403 }
       );
     }
 
     if (penggunalama?.foto)
-      await hapusFile(penggunalama?.foto, PATH_UPLOAD.admin);
+      await hapusFile(penggunalama?.foto, PATH_UPLOAD.user);
 
-    const deleted = await deleteAdmin(parsedId);
+    const deleted = await deleteUser(parsedId);
 
     return Response.json({
       message: "Berhasil menghapus data",
-      deleted: deleted,
+      payload: deleted,
     });
   } catch (error) {
     getLogs("pengguna").error(error);

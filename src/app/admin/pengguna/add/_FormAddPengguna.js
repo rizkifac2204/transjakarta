@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Textinput from "@/components/ui/TextInput";
 import Textarea from "@/components/ui/TextArea";
 import Select from "@/components/ui/Select";
@@ -14,7 +13,6 @@ import { MAX_FOTO_SIZE } from "@/configs/appConfig";
 import { validateStrongPassword } from "@/utils/strongPassword";
 
 function FormAddPengguna({ level }) {
-  const router = useRouter();
   const [resetKey, setResetKey] = useState(0);
 
   const {
@@ -61,10 +59,9 @@ function FormAddPengguna({ level }) {
         },
       });
 
+      toast.success(res?.data?.message || "Berhasil");
       reset();
       setResetKey((prev) => prev + 1);
-      toast.success(res?.data?.message || "Berhasil");
-      router.refresh();
     } catch (error) {
       toast.error(error?.response?.data?.message || "Terjadi Kesalahan");
     }
