@@ -11,7 +11,7 @@ function NotFoundPublik() {
               <div className="404-capstion text-center my-4">
                 <div className="404-captions mb-5">
                   <Image
-                    src="/front/error.png"
+                    src="/assets/images/error.png"
                     alt="Error Illustration"
                     width={200}
                     height={200}
