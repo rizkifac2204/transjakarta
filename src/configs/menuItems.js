@@ -97,6 +97,23 @@ const menuItems = [
   },
 
   {
+    title: "Pertanyaan Form Armada",
+    icon: "solar:folder-path-connect-broken",
+    link: "#",
+    isHide: false,
+    child: [
+      {
+        childtitle: "Data Set",
+        childlink: "/admin/armada/question-set",
+      },
+      {
+        childtitle: "Tambah Data",
+        childlink: "/admin/armada/question",
+      },
+    ],
+  },
+
+  {
     title: "Infografis",
     isHide: false,
     icon: "solar:chart-square-broken",

@@ -72,7 +72,7 @@ model armada_question {
   spm_criteria   String
   spm_reference  String?
   order          Int
-  question_set   armada_question_set    @relation(fields: [set_id], references: [id])
+  question_set   armada_question_set    @relation(fields: [set_id], references: [id], onDelete: Cascade)
   survey_answers armada_survey_answer[]
 
   @@map("armada_question")
