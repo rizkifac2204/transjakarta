@@ -1,25 +1,6 @@
 import { verifyAuth } from "@/libs/jwt";
-import {
-  getAllArmadaQuestionSet,
-  createArmadaQuestionSet,
-} from "@/libs/armada-question-set";
+import { createArmadaQuestionSet } from "@/libs/armada-question-set";
 import getLogs from "@/libs/getLogs";
-
-export async function GET() {
-  try {
-    const questionSets = await getAllArmadaQuestionSet();
-    return Response.json(questionSets);
-  } catch (error) {
-    getLogs("armada").error(error);
-    return Response.json(
-      {
-        message: "Terjadi Kesalahan",
-        error: error instanceof Error ? error.message : error,
-      },
-      { status: error.status || 500 }
-    );
-  }
-}
 
 export async function POST(request) {
   try {
@@ -34,9 +15,6 @@ export async function POST(request) {
         { status: 400 }
       );
     }
-
-    // console.log({ description, service_types, fleet_types });
-    // return Response.json({ error: "KEDAP" }, { status: 400 });
 
     const newQuestionSet = await createArmadaQuestionSet({
       description,

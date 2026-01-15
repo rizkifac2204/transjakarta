@@ -50,10 +50,12 @@ const QuestionSetForm = ({ serviceTypes, fleetTypes }) => {
 
       await axios.post("/api/armada/question-set", payload);
       toast.success("Berhasil Membuat Data");
-      router.refresh();
+      setTimeout(() => {
+        router.refresh();
+      }, 1000);
     } catch (error) {
       console.log(error);
-      toast.error(error.response?.data?.error || "Gagal Membuat Data");
+      toast.error(error.response?.data?.message || "Gagal Membuat Data");
     }
   };
 

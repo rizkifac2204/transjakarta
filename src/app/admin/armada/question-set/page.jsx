@@ -14,9 +14,16 @@ const QuestionSetPage = async () => {
     getAllArmadaQuestionSet(),
   ]);
 
+  const modifiedData = questionSets?.map((q) => {
+    return {
+      ...q,
+      isManage: auth.level < 4,
+    };
+  });
+
   return (
     <div>
-      <QuestionSetTable initialData={questionSets} />
+      <QuestionSetTable initialData={modifiedData} />
     </div>
   );
 };

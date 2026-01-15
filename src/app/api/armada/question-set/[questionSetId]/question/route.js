@@ -1,13 +1,5 @@
-import { NextResponse } from "next/server";
-import prisma from "@/libs/prisma";
-
 import { verifyAuth } from "@/libs/jwt";
-import {
-  createArmadaQuestionSet,
-  getArmadaQuestionSetById,
-  updateArmadaQuestionSet,
-  deleteArmadaQuestionSet,
-} from "@/libs/armada-question-set";
+import { createArmadaQuestion } from "@/libs/armada-question";
 import getLogs from "@/libs/getLogs";
 
 export async function POST(request, { params }) {
@@ -22,28 +14,21 @@ export async function POST(request, { params }) {
       return Response.json({ message: "ID tidak valid" }, { status: 400 });
     }
 
-    const { text, category, spm_criteria, spm_reference, order } =
+    const { section, text, category, spm_criteria, spm_reference, order } =
       await request.json();
 
-    console.log({ text, category, spm_criteria, spm_reference, order });
-    return Response.json({ error: "KEDAP" }, { status: 400 });
-
-    if (!text || !category || !spm_criteria || !order) {
-      return Response.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+    if (!section || !text || !category || !spm_criteria || !order) {
+      return Response.json({ error: "Lengkapi Data" }, { status: 400 });
     }
 
-    const newQuestion = await prisma.armada_question.create({
-      data: {
-        set_id: parsedId,
-        text,
-        category,
-        spm_criteria,
-        spm_reference,
-        order,
-      },
+    const newQuestion = await createArmadaQuestion({
+      set_id: parsedId,
+      section,
+      text,
+      category,
+      spm_criteria,
+      spm_reference,
+      order: parseInt(order),
     });
 
     return Response.json(newQuestion, { status: 201 });

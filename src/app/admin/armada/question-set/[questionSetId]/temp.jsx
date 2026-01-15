@@ -48,7 +48,7 @@ const questionSetSchema = yup.object().shape({
     .required("Fleet type is required"),
 });
 
-const QuestionDetails = ({ initialData }) => {
+const TableQuestions = ({ initialData }) => {
   const router = useRouter();
   const [questionSet, setQuestionSet] = useState(initialData);
   const [isAddQuestionModalOpen, setIsAddQuestionModalOpen] = useState(false);
@@ -65,8 +65,11 @@ const QuestionDetails = ({ initialData }) => {
   } = useForm({
     resolver: yupResolver(questionSchema),
     defaultValues: {
-      order: questionSet.questions.length > 0 ? Math.max(...questionSet.questions.map(q => q.order)) + 1 : 1
-    }
+      order:
+        questionSet.questions.length > 0
+          ? Math.max(...questionSet.questions.map((q) => q.order)) + 1
+          : 1,
+    },
   });
 
   const {
@@ -79,9 +82,9 @@ const QuestionDetails = ({ initialData }) => {
     resolver: yupResolver(questionSetSchema),
     defaultValues: {
       description: questionSet.description,
-      service_types: questionSet.service_types.map(st => st.id.toString()), // Map to array of string IDs
-      fleet_types: questionSet.fleet_types.map(ft => ft.id.toString()),     // Map to array of string IDs
-    }
+      service_types: questionSet.service_types.map((st) => st.id.toString()), // Map to array of string IDs
+      fleet_types: questionSet.fleet_types.map((ft) => ft.id.toString()), // Map to array of string IDs
+    },
   });
 
   useEffect(() => {
@@ -92,7 +95,7 @@ const QuestionDetails = ({ initialData }) => {
           axios.get("/api/services/fleet-types"),
         ]);
         setServiceTypes(serviceRes.data); // Keep as full objects for checkboxes
-        setFleetTypes(fleetRes.data);     // Keep as full objects for checkboxes
+        setFleetTypes(fleetRes.data); // Keep as full objects for checkboxes
       } catch (error) {
         console.error("Failed to fetch select options:", error);
         toast.error("Failed to load necessary data.");
@@ -132,12 +135,16 @@ const QuestionDetails = ({ initialData }) => {
             <Button
               icon="heroicons:pencil-square"
               className="btn-link btn-sm p-0"
-              onClick={() => toast.info("Edit question functionality coming soon!")}
+              onClick={() =>
+                toast.info("Edit question functionality coming soon!")
+              }
             />
             <Button
               icon="heroicons:trash"
               className="btn-link btn-sm p-0 text-danger-500"
-              onClick={() => toast.info("Delete question functionality coming soon!")}
+              onClick={() =>
+                toast.info("Delete question functionality coming soon!")
+              }
             />
           </div>
         ),
@@ -168,15 +175,15 @@ const QuestionDetails = ({ initialData }) => {
       router.refresh(); // Revalidate data
       setIsAddQuestionModalOpen(false);
       resetQuestionForm({
-        order: Math.max(...questionSet.questions.map(q => q.order)) + 1,
+        order: Math.max(...questionSet.questions.map((q) => q.order)) + 1,
         text: "",
         category: "",
         spm_criteria: "",
-        spm_reference: ""
+        spm_reference: "",
       });
     } catch (error) {
       console.error("Failed to add question:", error);
-      toast.error(error.response?.data?.error || "Failed to add question");
+      toast.error(error.response?.data?.message || "Failed to add question");
     }
   };
 
@@ -195,13 +202,17 @@ const QuestionDetails = ({ initialData }) => {
     } catch (error) {
       console.error("Failed to update question set:", error);
       toast.error(
-        error.response?.data?.error || "Failed to update question set"
+        error.response?.data?.message || "Failed to update question set"
       );
     }
   };
 
   const onDeleteSet = async () => {
-    if (window.confirm("Are you sure you want to delete this question set? All associated questions will also be deleted.")) {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this question set? All associated questions will also be deleted."
+      )
+    ) {
       try {
         await axios.delete(`/api/armada/question-set/${questionSet.id}`);
         toast.success("Question Set deleted successfully!");
@@ -209,7 +220,7 @@ const QuestionDetails = ({ initialData }) => {
       } catch (error) {
         console.error("Failed to delete question set:", error);
         toast.error(
-          error.response?.data?.error || "Failed to delete question set"
+          error.response?.data?.message || "Failed to delete question set"
         );
       }
     }
@@ -217,20 +228,20 @@ const QuestionDetails = ({ initialData }) => {
 
   return (
     <div>
-      <Card title="Question Set Details">
+      <Card title="DETAIL SET PERTANYAAN">
         <div className="space-y-4">
           <div>
-            <span className="font-semibold">Description: </span>
+            <span className="font-semibold">Deskripsi: </span>
             <span>{questionSet.description}</span>
           </div>
           <div>
-            <span className="font-semibold">Service Types: </span>
+            <span className="font-semibold">TIPE LAYANAN: </span>
             <span>
               {questionSet.service_types.map((st) => st.name).join(", ")}
             </span>
           </div>
           <div>
-            <span className="font-semibold">Fleet Types: </span>
+            <span className="font-semibold">TIPE ARMADA: </span>
             <span>
               {questionSet.fleet_types.map((ft) => ft.name).join(", ")}
             </span>
@@ -242,8 +253,12 @@ const QuestionDetails = ({ initialData }) => {
               onClick={() => {
                 resetSetForm({
                   description: questionSet.description,
-                  service_types: questionSet.service_types.map(st => st.id.toString()), // Map to array of string IDs
-                  fleet_types: questionSet.fleet_types.map(ft => ft.id.toString()),     // Map to array of string IDs
+                  service_types: questionSet.service_types.map((st) =>
+                    st.id.toString()
+                  ), // Map to array of string IDs
+                  fleet_types: questionSet.fleet_types.map((ft) =>
+                    ft.id.toString()
+                  ), // Map to array of string IDs
                 });
                 setIsEditSetModalOpen(true);
               }}
@@ -264,11 +279,14 @@ const QuestionDetails = ({ initialData }) => {
             className="btn-primary"
             onClick={() => {
               resetQuestionForm({
-                order: questionSet.questions.length > 0 ? Math.max(...questionSet.questions.map(q => q.order)) + 1 : 1,
+                order:
+                  questionSet.questions.length > 0
+                    ? Math.max(...questionSet.questions.map((q) => q.order)) + 1
+                    : 1,
                 text: "",
                 category: "",
                 spm_criteria: "",
-                spm_reference: ""
+                spm_reference: "",
               });
               setIsAddQuestionModalOpen(true);
             }}
@@ -333,13 +351,15 @@ const QuestionDetails = ({ initialData }) => {
         </div>
       </Card>
 
-      {/* Add Question Modal */}
-      <Modal
+      {/* <Modal
         activeModal={isAddQuestionModalOpen}
         onClose={() => setIsAddQuestionModalOpen(false)}
         title="Add New Question"
       >
-        <form onSubmit={handleAddQuestionSubmit(onAddQuestionSubmit)} className="space-y-4">
+        <form
+          onSubmit={handleAddQuestionSubmit(onAddQuestionSubmit)}
+          className="space-y-4"
+        >
           <TextInput
             label="Order"
             type="number"
@@ -385,13 +405,15 @@ const QuestionDetails = ({ initialData }) => {
         </form>
       </Modal>
 
-      {/* Edit Question Set Modal */}
       <Modal
         activeModal={isEditSetModalOpen}
         onClose={() => setIsEditSetModalOpen(false)}
         title="Edit Question Set"
       >
-        <form onSubmit={handleEditSetSubmit(onEditSetSubmit)} className="space-y-4">
+        <form
+          onSubmit={handleEditSetSubmit(onEditSetSubmit)}
+          className="space-y-4"
+        >
           <TextInput
             label="Description"
             type="text"
@@ -484,9 +506,9 @@ const QuestionDetails = ({ initialData }) => {
             <Button type="submit" text="Update Set" className="btn-primary" />
           </div>
         </form>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
 
-export default QuestionDetails;
+export default TableQuestions;

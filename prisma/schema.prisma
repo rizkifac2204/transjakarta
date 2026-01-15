@@ -67,6 +67,7 @@ model armada_question_set {
 model armada_question {
   id             Int                    @id @default(autoincrement())
   set_id         Int
+  section        section_armada         @default(KEAMANAN)
   text           String
   category       String
   spm_criteria   String
@@ -111,4 +112,13 @@ model armada_survey_answer {
 
   @@unique([armada_survey_id, question_id])
   @@map("armada_survey_answer")
+}
+
+
+enum section_armada {
+  KEAMANAN
+  KESELAMATAN
+  KENYAMANAN
+  KESETARAAN
+  KETERATURAN
 }

@@ -1,27 +1,44 @@
-import Breadcrumbs from "@/components/ui/Breadcrumbs";
-import { getQuestionSet } from "./_actions";
-import QuestionDetails from "./_QuestionDetails";
+import { verifyAuth } from "@/libs/jwt";
+import { decodeOrNotFound } from "@/libs/hash/safeDecode";
+import { getArmadaQuestionSetById } from "@/libs/armada-question-set";
 import { notFound } from "next/navigation";
 
-const QuestionSetDetailPage = async ({ params }) => {
-  const { questionSetId } = params;
-  const questionSet = await getQuestionSet(questionSetId);
+import QuestionDetails from "./_Detail";
+import TableQuestions from "./_TableQuestions";
 
-  if (!questionSet) {
+export const dynamic = "force-dynamic";
+export const metadata = {
+  title: "Detail Set Pertanyaan Armada",
+};
+
+const QuestionSetDetailPage = async ({ params }) => {
+  const auth = await verifyAuth();
+  const id = decodeOrNotFound(params.questionSetId);
+  const initial = await getArmadaQuestionSetById(id);
+
+  if (!initial) {
     notFound();
   }
 
+  const data = {
+    ...initial,
+    isManage: auth.level < 4,
+  };
+
   return (
-    <div>
-      <Breadcrumbs
-        items={[
-          { label: "Armada", href: "/admin/armada" },
-          { label: "Question Sets", href: "/admin/armada/question-set" },
-          { label: questionSet.description },
-        ]}
-      />
-      <QuestionDetails initialData={questionSet} />
-    </div>
+    <>
+      <div>
+        <QuestionDetails initialData={data} />
+      </div>
+
+      <div className="mt-2">
+        <TableQuestions
+          initialData={data?.questions}
+          set_id={id}
+          isManage={data.isManage}
+        />
+      </div>
+    </>
   );
 };
 
