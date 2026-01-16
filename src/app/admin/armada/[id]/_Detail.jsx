@@ -33,7 +33,7 @@ const ArmadaDetails = ({ initialData }) => {
 
   return (
     <Card
-      title={"Detail Survey"}
+      title={`JENIS SPM: ARMADA`}
       headerslot={
         <div
           className={`flex space-x-1 ${
@@ -67,7 +67,7 @@ const ArmadaDetails = ({ initialData }) => {
                 <button
                   className="action-btn"
                   type="button"
-                  onClick={() => handleDelete()}
+                  onClick={onDeleteSet}
                 >
                   {isDeleting ? (
                     <Icon
@@ -86,8 +86,8 @@ const ArmadaDetails = ({ initialData }) => {
     >
       <div className="grid grid-cols-3 gap-2">
         <div className="flex-1">
-          <div className="text-xs">JENIS SPM :</div>
-          <b>ARMADA</b>
+          <div className="text-xs">SURVEYOR :</div>
+          <b>{initialData?.surveyor?.nama}</b>
         </div>
         <div className="flex-1">
           <div className="text-xs">JENIS LAYANAN :</div>

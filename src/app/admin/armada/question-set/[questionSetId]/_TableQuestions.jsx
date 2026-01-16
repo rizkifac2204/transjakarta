@@ -58,8 +58,8 @@ const QuestionSetTable = ({ initialData, set_id, isManage }) => {
   };
 
   const columns = [
-    COLUMNHELPER.accessor("order", { header: "No" }),
     COLUMNHELPER.accessor("section", { header: "BAGIAN" }),
+    COLUMNHELPER.accessor("order", { header: "No" }),
     COLUMNHELPER.accessor("basic", { header: "PELAYANAN DASAR" }),
     COLUMNHELPER.accessor("indicator", { header: "INDIKATOR" }),
     COLUMNHELPER.accessor("spm_criteria", { header: "NILAI SPM DIUKUR" }),

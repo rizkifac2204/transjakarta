@@ -48,7 +48,9 @@ const Select = forwardRef(
         <option value="">{placeholder}</option>
         {options.map((option, i) => (
           <Fragment key={i}>
-            {option?.value && option?.label ? (
+            {typeof option === "object" &&
+            "value" in option &&
+            "label" in option ? (
               <option value={option.value}>{option.label}</option>
             ) : (
               <option value={option}>{option}</option>
