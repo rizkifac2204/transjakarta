@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { encodeId } from "@/libs/hash/hashId";
 
 import Select from "@/components/ui/Select";
 import Button from "@/components/ui/Button";
@@ -32,7 +33,7 @@ const QuestionForm = ({ set }) => {
       await axios.post(`/api/armada/question-set/${set.id}/question`, formData);
       toast.success("Berhasil Membuat Data");
       setTimeout(() => {
-        router.refresh();
+        router.back();
       }, 1000);
     } catch (error) {
       console.log(error);
@@ -55,6 +56,14 @@ const QuestionForm = ({ set }) => {
         placeholder={"Pilih Bagian"}
         {...register("section", { required: "Pilih Bagian" })}
         error={errors.section}
+      />
+
+      <TextInput
+        label="Urut Soal *"
+        type="text"
+        placeholder="a/b/c etc..."
+        {...register("order", { required: true })}
+        error={errors.order}
       />
 
       <TextInput
@@ -83,14 +92,6 @@ const QuestionForm = ({ set }) => {
         type="text"
         {...register("spm_reference", { required: true })}
         error={errors.spm_reference}
-      />
-
-      <TextInput
-        label="Nomor Urut Soal *"
-        type="text"
-        placeholder="a/b/c etc..."
-        {...register("order", { required: true })}
-        error={errors.order}
       />
 
       <div className="flex justify-end space-x-3 rtl:space-x-reverse">

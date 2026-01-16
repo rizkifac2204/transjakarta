@@ -68,9 +68,9 @@ model armada_question {
   id             Int                    @id @default(autoincrement())
   set_id         Int
   section        section_armada         @default(KEAMANAN)
-  basic          String?
-  indicator      String?
-  spm_criteria   String
+  basic          String?                @db.Text
+  indicator      String?                @db.Text
+  spm_criteria   String                 @db.Text
   spm_reference  String?
   order          String?                @default("a")
   question_set   armada_question_set    @relation(fields: [set_id], references: [id], onDelete: Cascade)
