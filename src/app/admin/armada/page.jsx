@@ -1,13 +1,24 @@
-import React from "react";
+import { verifyAuth } from "@/libs/jwt";
+import { getAllArmada } from "@/libs/armada";
 
-function ArmadaPage() {
+import ArmadaTable from "./_Table";
+
+export const dynamic = "force-dynamic";
+export const metadata = {
+  title: "Survey Armada",
+};
+
+async function ArmadaPage() {
+  const [auth, armadas] = await Promise.all([verifyAuth(), getAllArmada()]);
+
+  const modifuedArmadas = armadas.map((item) => ({
+    ...item,
+    isManage: auth.level < 3 || auth.id === item.surveyor_id,
+  }));
+
   return (
     <div>
-      <h3>TODO</h3>
-      <ul>
-        <li>Menampilkan tabel data survey terkait armada</li>
-        <li>Tombol detail edit dan hapus</li>
-      </ul>
+      <ArmadaTable initialData={modifuedArmadas} />
     </div>
   );
 }

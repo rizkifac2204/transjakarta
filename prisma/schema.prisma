@@ -86,8 +86,8 @@ model armada_survey {
   fleet_type_id   Int
   tanggal         DateTime
   periode         String
-  jam_mulai       String
-  jam_selesai     String
+  jam_mulai       DateTime             @default(now()) @db.Timestamp(0)
+  jam_selesai     DateTime             @db.Timestamp(0)
   no_body         String
   kode_trayek     String
   asal_tujuan     String
