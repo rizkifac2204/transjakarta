@@ -65,18 +65,18 @@ export async function PUT(request, { params }) {
       return Response.json({ message: "ID tidak valid" }, { status: 400 });
     }
 
-    const { section, text, category, spm_criteria, order } =
+    const { section, basic, indicator, spm_criteria, order } =
       await request.json();
 
-    if (!section || !text || !category || !spm_criteria || !order) {
+    if (!section || !basic || !indicator || !spm_criteria || !order) {
       return Response.json({ error: "Lengkapi Data" }, { status: 400 });
     }
 
     const updatedQuestion = await updateArmadaQuestion(parsedQuestionId, {
       data: {
         section,
-        text,
-        category,
+        basic,
+        indicator,
         spm_criteria,
         order,
       },

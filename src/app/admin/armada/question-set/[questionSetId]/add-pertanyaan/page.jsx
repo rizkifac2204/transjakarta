@@ -24,6 +24,13 @@ const QuestionSetAddPage = async ({ params }) => {
   return (
     <Card
       title={`FORMULIR TAMBAH PERTANYAAN`}
+      subtitle={
+        <>
+          <span>{set.service_types.map((st) => st.name).join(", ")}</span>
+          <br />
+          <span>{set.fleet_types.map((st) => st.name).join(", ")}</span>
+        </>
+      }
       noborder={false}
       headerslot={
         <Link

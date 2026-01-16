@@ -3,7 +3,9 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-
+import { encodeId } from "@/libs/hash/hashId";
+import Link from "next/link";
+import Icon from "@/components/ui/Icon";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 
@@ -26,28 +28,43 @@ const QuestionDetails = ({ initialData }) => {
   };
 
   return (
-    <Card title="DETAIL SET PERTANYAAN">
+    <Card
+      title={initialData.description || "Detail Set Pertanyaan"}
+      headerslot={
+        <Link className="action-btn" href={`/admin/armada/question-set`}>
+          <Icon icon="solar:alt-arrow-left-bold-duotone" />
+        </Link>
+      }
+    >
       <div className="space-y-4">
         <div>
-          <span className="font-semibold">Deskripsi: </span>
-          <span>{initialData.description}</span>
-        </div>
-        <div>
-          <span className="font-semibold">TIPE LAYANAN: </span>
-          <span>
+          <span>Tipe Layanan: </span>
+          <span className="font-semibold">
             {initialData.service_types.map((st) => st.name).join(", ")}
           </span>
         </div>
         <div>
-          <span className="font-semibold">TIPE ARMADA: </span>
-          <span>{initialData.fleet_types.map((ft) => ft.name).join(", ")}</span>
+          <span>Tipe Armada: </span>
+          <span className="font-semibold">
+            {initialData.fleet_types.map((ft) => ft.name).join(", ")}
+          </span>
         </div>
         <div className="flex space-x-3 rtl:space-x-reverse">
-          <Button text="Edit" className="btn-outline-primary btn-sm" />
           <Button
             text="Hapus"
             className="btn-danger btn-sm"
             onClick={onDeleteSet}
+          />
+          <Button
+            text="Tambah Pertanyaan"
+            className="btn-primary btn-sm"
+            onClick={() => {
+              router.push(
+                `/admin/armada/question-set/${encodeId(
+                  initialData.id
+                )}/add-pertanyaan`
+              );
+            }}
           />
         </div>
       </div>

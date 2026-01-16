@@ -18,7 +18,16 @@ const QuestionAddModal = async ({ params }) => {
 
   return (
     <Modal>
-      <Card title={`FORMULIR TAMBAH PERTANYAAN`}>
+      <Card
+        title={`FORMULIR TAMBAH PERTANYAAN`}
+        subtitle={
+          <>
+            <span>{set.service_types.map((st) => st.name).join(", ")}</span>
+            <br />
+            <span>{set.fleet_types.map((st) => st.name).join(", ")}</span>
+          </>
+        }
+      >
         <QuestionForm set={set} />
       </Card>
     </Modal>

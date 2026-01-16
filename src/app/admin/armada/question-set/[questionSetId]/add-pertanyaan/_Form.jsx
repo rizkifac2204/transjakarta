@@ -19,8 +19,8 @@ const QuestionForm = ({ set }) => {
   } = useForm({
     defaultValues: {
       section: "",
-      text: "",
-      category: "",
+      basic: "",
+      indicator: "",
       spm_criteria: "",
       spm_reference: "",
       order: "",
@@ -60,15 +60,15 @@ const QuestionForm = ({ set }) => {
       <TextInput
         label="Jenis Pelayanan Dasar *"
         type="text"
-        {...register("text", { required: true })}
-        error={errors.text}
+        {...register("basic", { required: true })}
+        error={errors.basic}
       />
 
       <TextInput
         label="Indikator *"
         type="text"
-        {...register("category", { required: true })}
-        error={errors.category}
+        {...register("indicator", { required: true })}
+        error={errors.indicator}
       />
 
       <TextInput
@@ -87,7 +87,8 @@ const QuestionForm = ({ set }) => {
 
       <TextInput
         label="Nomor Urut Soal *"
-        type="number"
+        type="text"
+        placeholder="a/b/c etc..."
         {...register("order", { required: true })}
         error={errors.order}
       />

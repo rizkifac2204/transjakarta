@@ -6,10 +6,8 @@ import { toast } from "react-toastify";
 import Card from "@/components/ui/Card";
 import TablePagination from "@/components/ui/Table/Pagination";
 import TableSearchGlobal from "@/components/ui/Table/Search";
-import Link from "next/link";
 import Tooltip from "@/components/ui/Tooltip";
 import Icon from "@/components/ui/Icon";
-import { encodeId } from "@/libs/hash/hashId";
 import {
   useReactTable,
   getCoreRowModel,
@@ -60,18 +58,12 @@ const QuestionSetTable = ({ initialData, set_id, isManage }) => {
   };
 
   const columns = [
-    {
-      id: "no",
-      header: "No",
-      cell: ({ row }) => row.index + 1,
-      enableSorting: false,
-    },
+    COLUMNHELPER.accessor("order", { header: "No" }),
     COLUMNHELPER.accessor("section", { header: "BAGIAN" }),
-    COLUMNHELPER.accessor("text", { header: "PELAYANAN DASAR" }),
-    COLUMNHELPER.accessor("category", { header: "INDIKATOR" }),
+    COLUMNHELPER.accessor("basic", { header: "PELAYANAN DASAR" }),
+    COLUMNHELPER.accessor("indicator", { header: "INDIKATOR" }),
     COLUMNHELPER.accessor("spm_criteria", { header: "NILAI SPM DIUKUR" }),
     COLUMNHELPER.accessor("spm_reference", { header: "REFERE NSI SPM" }),
-    COLUMNHELPER.accessor("order", { header: "URUTAN SOAL" }),
     {
       id: "action",
       header: "Aksi",
@@ -79,51 +71,25 @@ const QuestionSetTable = ({ initialData, set_id, isManage }) => {
         const isDeleting = deletingRowId === row.original.id;
         const rowData = row.original;
         return (
-          <div
-            className={`flex space-x-1 rtl:space-x-reverse ${
-              isDeleting ? "pointer-events-none opacity-50" : ""
-            }`}
-          >
-            <Tooltip
-              content="Detail"
-              placement="top"
-              arrow
-              animation="shift-away"
+          <Tooltip content="Hapus" placement="top" arrow animation="shift-away">
+            <button
+              className={`action-btn ${
+                Boolean(deletingRowId) ? "pointer-events-none opacity-50" : ""
+              }`}
+              type="button"
+              disabled={!isManage}
+              onClick={() => handleDelete(rowData.id)}
             >
-              <Link
-                className="action-btn"
-                href={`/admin/armada/question-set/${encodeId(
-                  set_id
-                )}/${encodeId(rowData.id)}`}
-              >
-                <Icon icon="solar:eye-broken" />
-              </Link>
-            </Tooltip>
-            <Tooltip
-              content="Hapus"
-              placement="top"
-              arrow
-              animation="shift-away"
-            >
-              <button
-                className={`action-btn ${
-                  Boolean(deletingRowId) ? "pointer-events-none opacity-50" : ""
-                }`}
-                type="button"
-                disabled={!isManage}
-                onClick={() => handleDelete(rowData.id)}
-              >
-                {isDeleting ? (
-                  <Icon
-                    icon="line-md:loading-twotone-loop"
-                    className="animate-spin"
-                  />
-                ) : (
-                  <Icon icon="solar:trash-bin-2-broken" />
-                )}
-              </button>
-            </Tooltip>
-          </div>
+              {isDeleting ? (
+                <Icon
+                  icon="line-md:loading-twotone-loop"
+                  className="animate-spin"
+                />
+              ) : (
+                <Icon icon="solar:trash-bin-2-broken" />
+              )}
+            </button>
+          </Tooltip>
         );
       },
     },
@@ -158,21 +124,7 @@ const QuestionSetTable = ({ initialData, set_id, isManage }) => {
     <Card
       title="DATA PERTANYAAN"
       headerslot={
-        <div className="flex gap-2">
-          <TableSearchGlobal
-            filter={globalFilter}
-            setFilter={setGlobalFilter}
-          />
-          <Link
-            href={`/admin/armada/question-set/${encodeId(
-              set_id
-            )}/add-pertanyaan`}
-            scroll={false}
-            className={`shadow-md cursor-pointer px-4 py-2 bg-slate-50 dark:bg-slate-700 dark:bg-opacity-60 rounded-md`}
-          >
-            Tambah Pertanyaan
-          </Link>
-        </div>
+        <TableSearchGlobal filter={globalFilter} setFilter={setGlobalFilter} />
       }
     >
       <div className="overflow-x-auto -mx-6">
