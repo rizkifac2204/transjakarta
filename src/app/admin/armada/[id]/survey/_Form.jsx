@@ -1,7 +1,7 @@
 "use client";
 
 import Card from "@/components/ui/Card";
-import QuestionRow from "@/components/front/input/QuestionRow";
+import QuestionRow from "./_QuestionRow";
 
 const ArmadaForm = ({ initialData, questions }) => {
   if (!questions || questions.length === 0) {

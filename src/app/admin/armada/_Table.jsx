@@ -118,32 +118,47 @@ const ArmadaTable = ({ initialData }) => {
               </Link>
             </Tooltip>
             {rowData.isManage && (
-              <Tooltip
-                content="Hapus"
-                placement="top"
-                arrow
-                animation="shift-away"
-              >
-                <button
-                  className={`action-btn ${
-                    Boolean(deletingRowId)
-                      ? "pointer-events-none opacity-50"
-                      : ""
-                  }`}
-                  type="button"
-                  disabled={!rowData.isManage}
-                  onClick={() => handleDelete(rowData.id)}
+              <>
+                <Tooltip
+                  content="Survey"
+                  placement="top"
+                  arrow
+                  animation="shift-away"
                 >
-                  {isDeleting ? (
-                    <Icon
-                      icon="line-md:loading-twotone-loop"
-                      className="animate-spin"
-                    />
-                  ) : (
-                    <Icon icon="solar:trash-bin-2-broken" />
-                  )}
-                </button>
-              </Tooltip>
+                  <Link
+                    className="action-btn"
+                    href={`/admin/armada/${encodeId(rowData.id)}/survey`}
+                  >
+                    <Icon icon="solar:file-broken" />
+                  </Link>
+                </Tooltip>
+                <Tooltip
+                  content="Hapus"
+                  placement="top"
+                  arrow
+                  animation="shift-away"
+                >
+                  <button
+                    className={`action-btn ${
+                      Boolean(deletingRowId)
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }`}
+                    type="button"
+                    disabled={!rowData.isManage}
+                    onClick={() => handleDelete(rowData.id)}
+                  >
+                    {isDeleting ? (
+                      <Icon
+                        icon="line-md:loading-twotone-loop"
+                        className="animate-spin"
+                      />
+                    ) : (
+                      <Icon icon="solar:trash-bin-2-broken" />
+                    )}
+                  </button>
+                </Tooltip>
+              </>
             )}
           </div>
         );

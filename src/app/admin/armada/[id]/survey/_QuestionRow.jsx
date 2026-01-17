@@ -1,88 +1,115 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import axios from "axios";
 import Select from "@/components/ui/Select";
 import TextArea from "@/components/ui/TextArea";
 import FileInputController from "@/components/ui/FileInputController";
 import useDebounce from "@/utils/useDebounce";
 import Icon from "@/components/ui/Icon";
 
+const ANSWER_OPTIONS = [
+  { value: true, label: "Ya" },
+  { value: false, label: "Tidak" },
+];
+
 const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
   const [answer, setAnswer] = useState(initialAnswer?.answer ?? null);
   const [note, setNote] = useState(initialAnswer?.note ?? "");
   const [photoUrl, setPhotoUrl] = useState(initialAnswer?.photo_url ?? null);
+  const [lastSaved, setLastSaved] = useState(initialAnswer);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState(null);
 
   const debouncedNote = useDebounce(note, 1000);
 
-  // Corrected answerOptions to include placeholder and boolean values
-  const answerOptions = [
-    { value: "", label: "Pilih Jawaban" }, // Added empty value for placeholder
-    { value: true, label: "Ya" },
-    { value: false, label: "Tidak" },
-  ];
-
   const handlePhotoUpload = async (file) => {
     if (!file) return;
+
+    if (answer !== false) {
+      setError("Hanya bisa upload foto jika jawaban 'Tidak'.");
+      return;
+    }
+
     setIsUploading(true);
     setError(null);
     const formData = new FormData();
     formData.append("photo", file);
 
+    const originalPhotoUrl = photoUrl;
+
     try {
-      const response = await fetch("/api/armada/survey/answer/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `/api/armada/${armada_survey_id}/survey/${question.id}/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       const result = await response.json();
       if (!response.ok) {
         throw new Error(result.error || "Gagal mengupload file.");
       }
+
       setPhotoUrl(result.url);
+
+      const payload = {
+        question_id: question.id,
+        answer,
+        note,
+        photo_url: result.url,
+      };
+      // await saveAnswer(payload);
     } catch (err) {
       setError(err.message);
+      setPhotoUrl(originalPhotoUrl); // Rollback on failure
     } finally {
       setIsUploading(false);
     }
   };
 
-  const saveAnswer = useCallback(async (payload) => {
-    setIsSaving(true);
-    setError(null);
-    try {
-      const response = await fetch("/api/armada/survey/answer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.error || "Gagal menyimpan jawaban.");
+  const saveAnswer = useCallback(
+    async (payload) => {
+      setIsSaving(true);
+      setError(null);
+      try {
+        const res = await axios.post(
+          `/api/armada/${armada_survey_id}/survey`,
+          payload
+        );
+        const { payload: savedPayload } = res.data;
+        setLastSaved({
+          answer: savedPayload.answer,
+          note: savedPayload.note,
+          photo_url: savedPayload.photo_url,
+        });
+      } catch (err) {
+        setError(err.message);
+        setAnswer(lastSaved?.answer ?? null);
+        setNote(lastSaved?.note ?? "");
+        setPhotoUrl(lastSaved?.photo_url ?? null);
+      } finally {
+        setIsSaving(false);
       }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsSaving(false);
-    }
-  }, []);
+    },
+    [armada_survey_id, lastSaved]
+  );
 
   const deleteAnswer = useCallback(async () => {
     setIsSaving(true);
     setError(null);
     try {
       const response = await fetch(
-        `/api/armada/survey/answer/${armada_survey_id}/${question.id}`,
-        {
-          method: "DELETE",
-        }
+        `/api/armada/${armada_survey_id}/survey/${question.id}`,
+        { method: "DELETE" }
       );
       if (!response.ok) {
         const err = await response.json();
         throw new Error(err.error || "Gagal menghapus jawaban.");
       }
-      // Optionally clear photoUrl and note states locally after deletion
+      setLastSaved({ answer: null, note: "", photo_url: null });
+      setAnswer(null);
       setPhotoUrl(null);
       setNote("");
     } catch (err) {
@@ -90,66 +117,67 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
     } finally {
       setIsSaving(false);
     }
-  }, [armada_survey_id, question.id]);
+  }, [armada_survey_id, question.id, setLastSaved]);
 
   useEffect(() => {
-    const initialAnswerValue = initialAnswer?.answer ?? null;
-    const initialNoteValue = initialAnswer?.note ?? "";
-    const initialPhotoUrlValue = initialAnswer?.photo_url ?? null;
-
-    const answerChanged = answer !== initialAnswerValue;
-    const noteChanged = debouncedNote !== initialNoteValue;
-    const photoChanged = photoUrl !== initialPhotoUrlValue;
-
-    // Only proceed if there has been a meaningful change from the initial state
-    const hasAnyChange = answerChanged || noteChanged || photoChanged;
-    if (!hasAnyChange) {
+    // If the answer is 'Yes', notes are managed by handleSelectChange, not this effect.
+    if (answer === true) {
       return;
     }
 
-    // --- Deletion Logic ---
-    // If answer is set to null, and it was previously non-null, then delete the answer
-    if (answer === null && initialAnswerValue !== null) {
-      deleteAnswer();
+    const lastSavedNote = lastSaved?.note ?? "";
+    // Do not save if the note hasn't meaningfully changed.
+    if (debouncedNote === lastSavedNote) {
       return;
     }
-
-    // --- Saving Logic ---
-    // If answer is null (and it was null initially or has become null, and not a deletion scenario),
-    // then we don't save.
+    // Do not save a note if no answer has been given yet.
     if (answer === null) {
       return;
     }
 
-    // Otherwise, save the answer
     const payload = {
-      armada_survey_id,
       question_id: question.id,
-      answer, // This will be true/false boolean
+      answer,
       note: debouncedNote,
       photo_url: photoUrl,
     };
-
     saveAnswer(payload);
-  }, [
-    answer,
-    debouncedNote,
-    photoUrl,
-    initialAnswer, // Included to ensure re-evaluation if initial props change
-    armada_survey_id,
-    question.id,
-    saveAnswer,
-    deleteAnswer, // Added deleteAnswer to deps
-  ]);
+  }, [debouncedNote, answer, photoUrl, question.id, lastSaved, saveAnswer]);
 
-  const handleSelectChange = (e) => {
+  const handleSelectChange = async (e) => {
     const selectedValue = e.target.value;
-    if (selectedValue === "true") {
-      setAnswer(true);
-    } else if (selectedValue === "false") {
-      setAnswer(false);
+    const newAnswer =
+      selectedValue === "true"
+        ? true
+        : selectedValue === "false"
+        ? false
+        : null;
+
+    // jika tidak ada perubahan, jangan lakukan apa-apa
+    if (newAnswer === answer) return;
+
+    setAnswer(newAnswer);
+
+    let payloadNote = note;
+    let payloadPhoto = photoUrl;
+
+    if (newAnswer === true) {
+      setNote("");
+      setPhotoUrl(null);
+      payloadNote = "";
+      payloadPhoto = null;
+    }
+
+    if (newAnswer === null) {
+      await deleteAnswer();
     } else {
-      setAnswer(null); // For the "Pilih Jawaban" option (value="")
+      const payload = {
+        question_id: question.id,
+        answer: newAnswer,
+        note: payloadNote,
+        photo_url: payloadPhoto,
+      };
+      await saveAnswer(payload);
     }
   };
 
@@ -167,7 +195,7 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
         </div>
         <div className="w-40">
           <Select
-            options={answerOptions}
+            options={ANSWER_OPTIONS}
             value={answer === null ? "" : String(answer)} // HTML <select> expects string values
             onChange={handleSelectChange}
           />
