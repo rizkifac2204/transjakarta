@@ -18,7 +18,7 @@ export async function POST(request, { params }) {
     const { id, question_id } = params;
     if (!id || !question_id) {
       return Response.json(
-        { error: "Missing required parameters" },
+        { message: "Missing required parameters" },
         { status: 400 },
       );
     }
@@ -27,6 +27,17 @@ export async function POST(request, { params }) {
     const parsedQuestionId = parseInt(question_id);
     if (isNaN(parsedSurveyId) || isNaN(parsedQuestionId)) {
       return Response.json({ message: "ID tidak valid" }, { status: 400 });
+    }
+
+    // authorize surveyor atau admin
+    const armada = await prisma.armada_survey.findUnique({
+      where: { id: parsedSurveyId },
+    });
+    if (!armada) {
+      return Response.json({ message: "Not Found" }, { status: 404 });
+    }
+    if (auth.role > 3 && auth.id !== armada.surveyor_id) {
+      return Response.json({ message: "Forbidden" }, { status: 403 });
     }
 
     const formData = await request.formData();
@@ -48,7 +59,7 @@ export async function POST(request, { params }) {
 
     if (!answerRecord) {
       return Response.json(
-        { error: "Jawaban tidak ditemukan" },
+        { message: "Jawaban tidak ditemukan" },
         { status: 404 },
       );
     }
@@ -106,7 +117,7 @@ export async function DELETE(_request, { params }) {
     const { id, question_id } = params;
     if (!id || !question_id) {
       return Response.json(
-        { error: "Missing required parameters" },
+        { message: "Missing required parameters" },
         { status: 400 },
       );
     }
@@ -127,7 +138,7 @@ export async function DELETE(_request, { params }) {
     });
     if (!answerRecord) {
       return Response.json(
-        { error: "Jawaban tidak ditemukan" },
+        { message: "Jawaban tidak ditemukan" },
         { status: 404 },
       );
     }

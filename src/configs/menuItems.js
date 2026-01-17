@@ -94,23 +94,16 @@ const menuItems = [
   {
     isHeader: true,
     title: "support",
+    access_level: [1, 2, 3],
   },
 
   {
     title: "Pertanyaan Form Armada",
+    isHide: true,
     icon: "solar:folder-path-connect-broken",
-    link: "#",
-    isHide: false,
-    child: [
-      {
-        childtitle: "Data Set",
-        childlink: "/admin/armada/question-set",
-      },
-      {
-        childtitle: "Tambah Data",
-        childlink: "/admin/armada/question",
-      },
-    ],
+    link: "/admin/armada/question-set",
+    badge: null,
+    access_level: [1, 2, 3],
   },
 
   {
@@ -118,6 +111,7 @@ const menuItems = [
     isHide: false,
     icon: "solar:chart-square-broken",
     link: "/admin/chart",
+    access_level: [1, 2, 3],
   },
 ];
 

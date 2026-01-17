@@ -3,33 +3,6 @@ import { parseJsonBody } from "@/utils/parseJsonBody";
 import { getArmadaById, updateArmada, deleteArmada } from "@/libs/armada";
 import getLogs from "@/libs/getLogs";
 
-export async function GET(_request, { params }) {
-  try {
-    const { id } = params;
-    const parsedId = parseInt(id);
-    if (!id || isNaN(parsedId)) {
-      return Response.json({ message: "ID tidak valid" }, { status: 400 });
-    }
-
-    const armada = await getArmadaById(parsedId);
-
-    if (!armada) {
-      return Response.json({ error: "Data not found" }, { status: 404 });
-    }
-
-    return Response.json(armada);
-  } catch (error) {
-    getLogs("armada").error(error);
-    return Response.json(
-      {
-        message: "Terjadi Kesalahan",
-        error: error instanceof Error ? error.message : error,
-      },
-      { status: error.status || 500 }
-    );
-  }
-}
-
 export async function PATCH(request, { params }) {
   try {
     const auth = await verifyAuth();
@@ -70,17 +43,17 @@ export async function PATCH(request, { params }) {
       !asal_tujuan
     ) {
       return Response.json(
-        { error: "Missing required fields" },
-        { status: 400 }
+        { message: "Missing required fields" },
+        { status: 400 },
       );
     }
 
     const armada = await getArmadaById(parsedId);
     if (!armada) {
-      return Response.json({ error: "Data not found" }, { status: 404 });
+      return Response.json({ message: "Data not found" }, { status: 404 });
     }
     if (auth.level >= 4 && armada.surveyor_id !== auth.id) {
-      return Response.json({ error: "Forbidden" }, { status: 403 });
+      return Response.json({ message: "Forbidden" }, { status: 403 });
     }
 
     const updated = await updateArmada(parsedId, {
@@ -103,7 +76,7 @@ export async function PATCH(request, { params }) {
         message: "Terjadi Kesalahan",
         error: error instanceof Error ? error.message : error,
       },
-      { status: error.status || 500 }
+      { status: error.status || 500 },
     );
   }
 }
@@ -120,10 +93,10 @@ export async function DELETE(request, { params }) {
 
     const armada = await getArmadaById(parsedId);
     if (!armada) {
-      return Response.json({ error: "Data not found" }, { status: 404 });
+      return Response.json({ message: "Data not found" }, { status: 404 });
     }
     if (auth.level >= 4 && armada.surveyor_id !== auth.id) {
-      return Response.json({ error: "Forbidden" }, { status: 403 });
+      return Response.json({ message: "Forbidden" }, { status: 403 });
     }
 
     const deleted = await deleteArmada(parsedId);
@@ -139,7 +112,7 @@ export async function DELETE(request, { params }) {
         message: "Terjadi Kesalahan",
         error: error instanceof Error ? error.message : error,
       },
-      { status: error.status || 500 }
+      { status: error.status || 500 },
     );
   }
 }

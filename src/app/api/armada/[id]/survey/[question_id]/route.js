@@ -12,7 +12,7 @@ export async function DELETE(_request, { params }) {
     const { id, question_id } = params;
     if (!id || !question_id) {
       return Response.json(
-        { error: "Missing required parameters" },
+        { message: "Missing required parameters" },
         { status: 400 },
       );
     }
@@ -21,6 +21,17 @@ export async function DELETE(_request, { params }) {
     const parsedQuestionId = parseInt(question_id);
     if (isNaN(parsedSurveyId) || isNaN(parsedQuestionId)) {
       return Response.json({ message: "ID tidak valid" }, { status: 400 });
+    }
+
+    // authorize surveyor atau admin
+    const armada = await prisma.armada_survey.findUnique({
+      where: { id: parsedSurveyId },
+    });
+    if (!armada) {
+      return Response.json({ message: "Not Found" }, { status: 404 });
+    }
+    if (auth.role > 3 && auth.id !== armada.surveyor_id) {
+      return Response.json({ message: "Forbidden" }, { status: 403 });
     }
 
     const answerRecord = await prisma.armada_survey_answer.findUnique({
@@ -34,7 +45,7 @@ export async function DELETE(_request, { params }) {
 
     if (!answerRecord) {
       return Response.json(
-        { error: "Jawaban tidak ditemukan" },
+        { message: "Jawaban tidak ditemukan" },
         { status: 404 },
       );
     }
@@ -59,7 +70,7 @@ export async function DELETE(_request, { params }) {
     getLogs("armada").error(error);
     if (error.code === "P2025") {
       // Prisma Client error: Record not found
-      return Response.json({ error: "Answer not found" }, { status: 404 });
+      return Response.json({ message: "Answer not found" }, { status: 404 });
     }
     return Response.json(
       {

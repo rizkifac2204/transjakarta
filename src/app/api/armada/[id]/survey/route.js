@@ -16,6 +16,17 @@ export async function POST(request, { params }) {
       return Response.json({ message: "ID tidak valid" }, { status: 400 });
     }
 
+    // authorize surveyor atau admin
+    const armada = await prisma.armada_survey.findUnique({
+      where: { id: parsedId },
+    });
+    if (!armada) {
+      return Response.json({ message: "Not Found" }, { status: 404 });
+    }
+    if (auth.role > 3 && auth.id !== armada.surveyor_id) {
+      return Response.json({ message: "Forbidden" }, { status: 403 });
+    }
+
     const body = await request.json();
     const parsedBody = parseJsonBody(body, {
       integerFields: ["question_id"],
@@ -27,7 +38,7 @@ export async function POST(request, { params }) {
     // Answer can be false, so we check for undefined/null instead of just `!answer`
     if (!question_id || answer === null || answer === undefined) {
       return Response.json(
-        { error: "Missing required fields" },
+        { message: "Missing required fields" },
         { status: 400 },
       );
     }

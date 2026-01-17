@@ -1,7 +1,8 @@
 import prisma from "./prisma";
 
-export async function getAllArmada() {
+export async function getAllArmada({ where: extraWhere = {} } = {}) {
   return prisma.armada_survey.findMany({
+    where: extraWhere,
     include: {
       service_type: true,
       fleet_type: true,

@@ -9,18 +9,20 @@ export const metadata = {
 };
 
 async function ArmadaPage() {
-  const [auth, armadas] = await Promise.all([verifyAuth(), getAllArmada()]);
+  const auth = await verifyAuth();
 
+  const where = {};
+  if (auth.level > 3) {
+    where.surveyor_id = auth.id;
+  }
+
+  const armadas = await getAllArmada({ where: where });
   const modifuedArmadas = armadas.map((item) => ({
     ...item,
     isManage: auth.level < 3 || auth.id === item.surveyor_id,
   }));
 
-  return (
-    <div>
-      <ArmadaTable initialData={modifuedArmadas} />
-    </div>
-  );
+  return <ArmadaTable initialData={modifuedArmadas} />;
 }
 
 export default ArmadaPage;

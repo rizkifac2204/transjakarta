@@ -193,7 +193,7 @@ const ArmadaTable = ({ initialData }) => {
 
   return (
     <Card
-      title="DAT SURVEY ARMADA"
+      title="DATA SURVEY ARMADA"
       headerslot={
         <TableSearchGlobal filter={globalFilter} setFilter={setGlobalFilter} />
       }

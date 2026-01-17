@@ -39,10 +39,9 @@ const ArmadaFormAdd = ({ serviceTypes, fleetTypes }) => {
       const res = await axios.post("/api/armada", formData);
       toast.success("Berhasil Membuat Data");
       setTimeout(() => {
-        router.push(`/admin/armada/${encodeId(res.data.id)}`);
+        router.push(`/admin/armada/${encodeId(res.data.id)}/survey`);
       }, 1000);
     } catch (error) {
-      console.log(error);
       toast.error(error.response?.data?.message || "Gagal Membuat Data");
     }
   };

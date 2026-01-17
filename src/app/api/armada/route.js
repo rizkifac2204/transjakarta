@@ -36,8 +36,8 @@ export async function POST(request) {
       !asal_tujuan
     ) {
       return Response.json(
-        { error: "Missing required fields" },
-        { status: 400 }
+        { message: "Missing required fields" },
+        { status: 400 },
       );
     }
 
@@ -56,14 +56,13 @@ export async function POST(request) {
 
     return Response.json(newData, { status: 201 });
   } catch (error) {
-    console.log(error);
     getLogs("armada").error(error);
     return Response.json(
       {
         message: "Terjadi Kesalahan",
         error: error instanceof Error ? error.message : error,
       },
-      { status: error.status || 500 }
+      { status: error.status || 500 },
     );
   }
 }

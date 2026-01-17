@@ -19,7 +19,7 @@ export async function GET(_request, { params }) {
     if (!questionSet) {
       return Response.json(
         { error: "Question Set not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -31,7 +31,7 @@ export async function GET(_request, { params }) {
         message: "Terjadi Kesalahan",
         error: error instanceof Error ? error.message : error,
       },
-      { status: error.status || 500 }
+      { status: error.status || 500 },
     );
   }
 }
@@ -56,7 +56,7 @@ export async function PUT(request, { params }) {
     if (!description || !service_types || !fleet_types) {
       return Response.json(
         { error: "Missing required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -80,7 +80,7 @@ export async function PUT(request, { params }) {
         message: "Terjadi Kesalahan",
         error: error instanceof Error ? error.message : error,
       },
-      { status: error.status || 500 }
+      { status: error.status || 500 },
     );
   }
 }
@@ -105,12 +105,18 @@ export async function DELETE(request, { params }) {
     });
   } catch (error) {
     getLogs("armada").error(error);
+    if (error.code === "P2003") {
+      return Response.json(
+        { error: "Set Pertanyaan Sudah Memiliki Jawaban" },
+        { status: 404 },
+      );
+    }
     return Response.json(
       {
         message: "Terjadi Kesalahan",
         error: error instanceof Error ? error.message : error,
       },
-      { status: error.status || 500 }
+      { status: error.status || 500 },
     );
   }
 }

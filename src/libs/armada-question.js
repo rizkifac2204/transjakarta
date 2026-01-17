@@ -81,7 +81,7 @@ export async function getQuestionsBySurvey(service_type_id, fleet_type_id) {
 
   const allQuestions = questionSets.flatMap((set) => set.questions);
   const uniqueQuestions = Array.from(
-    new Map(allQuestions.map((q) => [q.id, q])).values()
+    new Map(allQuestions.map((q) => [q.id, q])).values(),
   );
 
   const customOrder = [

@@ -48,7 +48,7 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
         const newPhotoUrl = response.data?.payload?.photo_url;
         setPhotoUrl(newPhotoUrl);
       } catch (err) {
-        setError(err.message);
+        setError(err.response?.data?.message || err.message);
       } finally {
         setIsUploading(false);
       }
@@ -62,7 +62,7 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
         );
         setPhotoUrl(null);
       } catch (err) {
-        setError(err.message);
+        setError(err.response?.data?.message || err.message);
       } finally {
         setIsUploading(false);
       }
@@ -85,7 +85,7 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
           photo_url: savedPayload.photo_url,
         });
       } catch (err) {
-        setError(err.message);
+        setError(err.response?.data?.message || err.message);
         setAnswer(lastSaved?.answer ?? null);
         setNote(lastSaved?.note ?? "");
         setPhotoUrl(lastSaved?.photo_url ?? null);
@@ -113,7 +113,7 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
       setPhotoUrl(null);
       setNote("");
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message);
     } finally {
       setIsSaving(false);
     }

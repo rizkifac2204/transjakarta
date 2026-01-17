@@ -26,7 +26,7 @@ async function ArmadaDetail({ params }) {
 
   const questions = await getQuestionsBySurvey(
     armada.service_type_id,
-    armada.fleet_type_id
+    armada.fleet_type_id,
   );
 
   const modifiedArmada = {
