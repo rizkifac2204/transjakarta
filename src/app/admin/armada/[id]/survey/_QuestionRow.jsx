@@ -4,8 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import Select from "@/components/ui/Select";
 import TextArea from "@/components/ui/TextArea";
-import FileInputController from "@/components/ui/FileInputController";
+import ImageUpload from "@/components/ui/ImageUpload";
 import useDebounce from "@/utils/useDebounce";
+import { MAX_FOTO_SIZE, PATH_UPLOAD } from "@/configs/appConfig";
 import Icon from "@/components/ui/Icon";
 
 const ANSWER_OPTIONS = [
@@ -16,6 +17,7 @@ const ANSWER_OPTIONS = [
 const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
   const [answer, setAnswer] = useState(initialAnswer?.answer ?? null);
   const [note, setNote] = useState(initialAnswer?.note ?? "");
+  const [progress, setProgress] = useState(0);
   const [photoUrl, setPhotoUrl] = useState(initialAnswer?.photo_url ?? null);
   const [lastSaved, setLastSaved] = useState(initialAnswer);
   const [isSaving, setIsSaving] = useState(false);
@@ -25,47 +27,45 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
   const debouncedNote = useDebounce(note, 1000);
 
   const handlePhotoUpload = async (file) => {
-    if (!file) return;
+    if (file && answer === false) {
+      setIsUploading(true);
+      setError(null);
+      const formData = new FormData();
+      formData.append("photo", file);
 
-    if (answer !== false) {
-      setError("Hanya bisa upload foto jika jawaban 'Tidak'.");
-      return;
-    }
+      try {
+        const response = await axios.post(
+          `/api/armada/${armada_survey_id}/survey/${question.id}/upload`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+            onUploadProgress: (event) => {
+              setProgress(Math.round((event.loaded * 100) / event.total));
+            },
+          },
+        );
 
-    setIsUploading(true);
-    setError(null);
-    const formData = new FormData();
-    formData.append("photo", file);
-
-    const originalPhotoUrl = photoUrl;
-
-    try {
-      const response = await fetch(
-        `/api/armada/${armada_survey_id}/survey/${question.id}/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.error || "Gagal mengupload file.");
+        const newPhotoUrl = response.data?.payload?.photo_url;
+        setPhotoUrl(newPhotoUrl);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsUploading(false);
       }
+    } else if (!file && photoUrl) {
+      setIsUploading(true);
+      setError(null);
 
-      setPhotoUrl(result.url);
-
-      const payload = {
-        question_id: question.id,
-        answer,
-        note,
-        photo_url: result.url,
-      };
-      // await saveAnswer(payload);
-    } catch (err) {
-      setError(err.message);
-      setPhotoUrl(originalPhotoUrl); // Rollback on failure
-    } finally {
-      setIsUploading(false);
+      try {
+        await axios.delete(
+          `/api/armada/${armada_survey_id}/survey/${question.id}/upload`,
+        );
+        setPhotoUrl(null);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsUploading(false);
+      }
     }
   };
 
@@ -76,7 +76,7 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
       try {
         const res = await axios.post(
           `/api/armada/${armada_survey_id}/survey`,
-          payload
+          payload,
         );
         const { payload: savedPayload } = res.data;
         setLastSaved({
@@ -93,7 +93,7 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
         setIsSaving(false);
       }
     },
-    [armada_survey_id, lastSaved]
+    [armada_survey_id, lastSaved],
   );
 
   const deleteAnswer = useCallback(async () => {
@@ -102,7 +102,7 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
     try {
       const response = await fetch(
         `/api/armada/${armada_survey_id}/survey/${question.id}`,
-        { method: "DELETE" }
+        { method: "DELETE" },
       );
       if (!response.ok) {
         const err = await response.json();
@@ -117,23 +117,12 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
     } finally {
       setIsSaving(false);
     }
-  }, [armada_survey_id, question.id, setLastSaved]);
+  }, [armada_survey_id, question.id]);
 
   useEffect(() => {
-    // If the answer is 'Yes', notes are managed by handleSelectChange, not this effect.
-    if (answer === true) {
-      return;
-    }
-
-    const lastSavedNote = lastSaved?.note ?? "";
-    // Do not save if the note hasn't meaningfully changed.
-    if (debouncedNote === lastSavedNote) {
-      return;
-    }
-    // Do not save a note if no answer has been given yet.
-    if (answer === null) {
-      return;
-    }
+    if (answer === true) return;
+    if (debouncedNote === (lastSaved?.note ?? "")) return;
+    if (answer === null) return;
 
     const payload = {
       question_id: question.id,
@@ -150,10 +139,9 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
       selectedValue === "true"
         ? true
         : selectedValue === "false"
-        ? false
-        : null;
+          ? false
+          : null;
 
-    // jika tidak ada perubahan, jangan lakukan apa-apa
     if (newAnswer === answer) return;
 
     setAnswer(newAnswer);
@@ -196,7 +184,7 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
         <div className="w-40">
           <Select
             options={ANSWER_OPTIONS}
-            value={answer === null ? "" : String(answer)} // HTML <select> expects string values
+            value={answer === null ? "" : String(answer)}
             onChange={handleSelectChange}
           />
         </div>
@@ -210,21 +198,25 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
             placeholder="Tambahkan catatan mengapa jawaban 'Tidak'..."
           />
           <div>
-            {/* <FileInputController
-              label="Upload Foto"
+            <ImageUpload
+              label={photoUrl ? "Ubah Foto Bukti" : "Unggah Foto Bukti"}
               name={`photo-${question.id}`}
               onChange={handlePhotoUpload}
-              preview={true}
-              initialImageUrl={photoUrl}
+              initialImageUrl={
+                photoUrl
+                  ? `/api/services/file/uploads/${PATH_UPLOAD.armada}/${photoUrl}`
+                  : null
+              }
               disabled={isUploading}
-            /> */}
+              maxFileSize={MAX_FOTO_SIZE}
+            />
             {isUploading && (
               <div className="flex items-center text-sm text-gray-500 mt-2">
                 <Icon
                   icon="line-md:loading-twotone-loop"
                   className="animate-spin mr-2"
                 />
-                <span>Mengupload...</span>
+                <span>Mengupload... ({progress}%)</span>
               </div>
             )}
           </div>

@@ -1,87 +1,22 @@
 "use client";
 
-import { useState } from "react";
-import axios from "axios";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import { encodeId } from "@/libs/hash/hashId";
 import { formatedDate, formatOutputTime } from "@/utils/formatDate";
 import Link from "next/link";
-import Tooltip from "@/components/ui/Tooltip";
 import Icon from "@/components/ui/Icon";
 import Card from "@/components/ui/Card";
 
 const ArmadaDetails = ({ initialData }) => {
-  const router = useRouter();
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  const onDeleteSet = async () => {
-    const confirmed = confirm("Yakin Menghapus Data Ini?");
-    if (!confirmed) return;
-
-    setIsDeleting(true);
-    try {
-      await axios.delete(`/api/armada/${initialData.id}`);
-      toast.success("Berhasil Hapus");
-      router.push("/admin/armada");
-    } catch (error) {
-      toast.error("Gagal Hapus");
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
   return (
     <Card
       title={`JENIS SPM: ARMADA`}
       headerslot={
-        <div
-          className={`flex space-x-1 ${
-            isDeleting ? "pointer-events-none opacity-50" : ""
-          }`}
+        <Link
+          className="action-btn"
+          href={`/admin/armada/${encodeId(initialData.id)}`}
         >
-          <Link className="action-btn" href={`/admin/armada`}>
-            <Icon icon="solar:alt-arrow-left-bold-duotone" />
-          </Link>
-          {initialData.isManage && (
-            <>
-              <Tooltip
-                content="Edit Data"
-                placement="top"
-                arrow
-                animation="shift-away"
-              >
-                <Link
-                  className="action-btn"
-                  href={`/admin/armada/${encodeId(initialData.id)}/edit`}
-                >
-                  <Icon icon="solar:pen-2-broken" />
-                </Link>
-              </Tooltip>
-              <Tooltip
-                content="Hapus Data"
-                placement="top"
-                arrow
-                animation="shift-away"
-              >
-                <button
-                  className="action-btn"
-                  type="button"
-                  onClick={onDeleteSet}
-                >
-                  {isDeleting ? (
-                    <Icon
-                      icon="line-md:loading-twotone-loop"
-                      className="animate-spin"
-                    />
-                  ) : (
-                    <Icon icon="solar:trash-bin-2-broken" />
-                  )}
-                </button>
-              </Tooltip>
-            </>
-          )}
-        </div>
+          <Icon icon="solar:alt-arrow-left-bold-duotone" />
+        </Link>
       }
     >
       <div className="grid grid-cols-3 gap-2">

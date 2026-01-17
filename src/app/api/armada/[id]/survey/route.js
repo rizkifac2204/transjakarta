@@ -2,6 +2,8 @@ import { verifyAuth } from "@/libs/jwt";
 import prisma from "@/libs/prisma";
 import getLogs from "@/libs/getLogs";
 import { parseJsonBody } from "@/utils/parseJsonBody";
+import { PATH_UPLOAD } from "@/configs/appConfig";
+import { hapusFile } from "@/services/uploadservices";
 
 export async function POST(request, { params }) {
   try {
@@ -26,17 +28,25 @@ export async function POST(request, { params }) {
     if (!question_id || answer === null || answer === undefined) {
       return Response.json(
         { error: "Missing required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    // DISINI SEPERTINYA TAMBAHAKN HAPUS FOTO DAN NULL NOTE JIKA JAWABAN TRUE
+    const answerRecord = await prisma.armada_survey_answer.findUnique({
+      where: {
+        armada_survey_id_question_id: {
+          armada_survey_id: parsedId,
+          question_id: question_id,
+        },
+      },
+    });
 
     const data = {
       armada_survey_id: parsedId,
       question_id,
       answer,
       note: answer ? null : note,
+      photo_url: answer ? null : answerRecord?.photo_url || null,
     };
 
     // tambah atau edit jawaban survei
@@ -50,9 +60,14 @@ export async function POST(request, { params }) {
       update: {
         answer: data.answer,
         note: data.note,
+        photo_url: data.photo_url,
       },
       create: data,
     });
+
+    if (answerRecord?.photo_url && answer) {
+      await hapusFile(answerRecord?.photo_url, PATH_UPLOAD.armada);
+    }
 
     return Response.json({
       message: "Berhasil menyimpan jawaban survei",
@@ -65,7 +80,7 @@ export async function POST(request, { params }) {
         message: "Terjadi Kesalahan",
         error: error instanceof Error ? error.message : error,
       },
-      { status: error.status || 500 }
+      { status: error.status || 500 },
     );
   }
 }

@@ -213,7 +213,7 @@ const ArmadaTable = ({ initialData }) => {
                       >
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                         {{
                           asc: " ▲",
@@ -244,7 +244,7 @@ const ArmadaTable = ({ initialData }) => {
                         <td key={cell.id} className="table-td">
                           {flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext()
+                            cell.getContext(),
                           )}
                         </td>
                       ))}

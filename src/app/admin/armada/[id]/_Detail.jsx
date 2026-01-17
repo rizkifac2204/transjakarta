@@ -59,6 +59,19 @@ const ArmadaDetails = ({ initialData }) => {
                 </Link>
               </Tooltip>
               <Tooltip
+                content="Survey Data"
+                placement="top"
+                arrow
+                animation="shift-away"
+              >
+                <Link
+                  className="action-btn"
+                  href={`/admin/armada/${encodeId(initialData.id)}/survey`}
+                >
+                  <Icon icon="solar:file-broken" />
+                </Link>
+              </Tooltip>
+              <Tooltip
                 content="Hapus Data"
                 placement="top"
                 arrow

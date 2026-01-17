@@ -13,7 +13,7 @@ export async function DELETE(_request, { params }) {
     if (!id || !question_id) {
       return Response.json(
         { error: "Missing required parameters" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -35,7 +35,7 @@ export async function DELETE(_request, { params }) {
     if (!answerRecord) {
       return Response.json(
         { error: "Jawaban tidak ditemukan" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -66,7 +66,7 @@ export async function DELETE(_request, { params }) {
         message: "Terjadi Kesalahan",
         error: error instanceof Error ? error.message : error,
       },
-      { status: error.status || 500 }
+      { status: error.status || 500 },
     );
   }
 }

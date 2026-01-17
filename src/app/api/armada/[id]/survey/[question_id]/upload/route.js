@@ -19,7 +19,7 @@ export async function POST(request, { params }) {
     if (!id || !question_id) {
       return Response.json(
         { error: "Missing required parameters" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -49,7 +49,7 @@ export async function POST(request, { params }) {
     if (!answerRecord) {
       return Response.json(
         { error: "Jawaban tidak ditemukan" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -62,7 +62,7 @@ export async function POST(request, { params }) {
     if (!resultUpload.success) {
       return Response.json(
         { message: resultUpload.message, error: "UploadError" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -93,12 +93,12 @@ export async function POST(request, { params }) {
         message: "Terjadi Kesalahan",
         error: error instanceof Error ? error.message : error,
       },
-      { status: error.status || 500 }
+      { status: error.status || 500 },
     );
   }
 }
 
-export async function DELETE(_request) {
+export async function DELETE(_request, { params }) {
   try {
     const auth = await verifyAuth();
     // belum ada blokir authorisasi
@@ -107,7 +107,7 @@ export async function DELETE(_request) {
     if (!id || !question_id) {
       return Response.json(
         { error: "Missing required parameters" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -128,7 +128,7 @@ export async function DELETE(_request) {
     if (!answerRecord) {
       return Response.json(
         { error: "Jawaban tidak ditemukan" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -156,7 +156,7 @@ export async function DELETE(_request) {
         message: "Terjadi Kesalahan",
         error: error instanceof Error ? error.message : error,
       },
-      { status: error.status || 500 }
+      { status: error.status || 500 },
     );
   }
 }
