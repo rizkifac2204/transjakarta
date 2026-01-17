@@ -13,7 +13,7 @@ async function ArmadaAddPage() {
   ]);
 
   return (
-    <Card title="Survey Armada">
+    <Card title={`SURVEY ARMADA`}>
       <ArmadaFormAdd serviceTypes={serviceTypes} fleetTypes={fleetTypes} />
     </Card>
   );

@@ -48,8 +48,7 @@ export default async function LoginOtpPage() {
                 <FormOtp />
               </div>
               <div className="auth-footer text-center">
-                Copyright 2025, Kementerian Pelindungan Pekerja Migran
-                Indonesia.
+                Copyright 2025, PT Surveyor Indonesia.
               </div>
             </div>
           </div>

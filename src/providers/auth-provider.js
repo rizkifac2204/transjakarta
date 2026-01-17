@@ -21,22 +21,26 @@ const AuthContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-  const signIn = async (data) => {
+  const signIn = async (data, callbackUrl) => {
     try {
       const token = await getRecaptchaToken("login");
       const res = await axios.post("/api/auth", { ...data, token: token });
 
       if (res.data.status === "success") {
-        window.open("/admin", "_self");
+        if (callbackUrl) {
+          window.open(callbackUrl, "_self");
+        } else {
+          window.open("/admin", "_self");
+        }
       } else if (res.data.status === "mfa_required") {
         const tempToken = res.data.tempToken;
-        window.open(`/login/otp?token=${tempToken}`, "_self");
+        router.push(`/login/otp?token=${tempToken}`);
       }
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
           error?.response?.data?.error ||
-          "Terjadi kesalahan"
+          "Terjadi kesalahan",
       );
     }
   };
@@ -45,7 +49,7 @@ const AuthContextProvider = ({ children }) => {
     try {
       const res = await axios.delete(`/api/auth`);
       setUser(null);
-      window.open("/login", "_self");
+      router.push("/login");
     } catch (error) {
       console.log("Error Something");
     }
@@ -64,13 +68,13 @@ const AuthContextProvider = ({ children }) => {
       });
 
       if (res.data.status === "success") {
-        window.open("/admin", "_self");
+        router.push("/admin");
       } else {
         toast.error(res.data.message || "Terjadi kesalahan");
       }
     } catch (error) {
       toast.error(
-        error?.response?.data?.message || "OTP salah atau kadaluarsa"
+        error?.response?.data?.message || "OTP salah atau kadaluarsa",
       );
     }
   };

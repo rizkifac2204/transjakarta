@@ -10,6 +10,7 @@ import { useAuthContext } from "@/providers/auth-provider";
 export default function FormSignIn() {
   const { signIn } = useAuthContext();
   const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
   const error = searchParams.get("error");
 
   const {
@@ -18,8 +19,12 @@ export default function FormSignIn() {
     formState: { errors, isSubmitting },
   } = useForm();
 
+  const onSubmit = (data) => {
+    signIn(data, callbackUrl);
+  };
+
   return (
-    <form onSubmit={handleSubmit(signIn)} className="space-y-4 ">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 ">
       <Textinput
         type="text"
         name="username"
