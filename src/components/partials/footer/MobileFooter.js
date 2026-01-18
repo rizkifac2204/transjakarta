@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -6,47 +5,26 @@ import Icon from "@/components/ui/Icon";
 import FilePreview from "@/components/ui/FilePreview";
 import { useAuthContext } from "@/providers/auth-provider";
 import { PATH_UPLOAD } from "@/configs/appConfig";
-import axios from "axios";
 
 const MobileFooter = () => {
   const { user } = useAuthContext();
   const router = useRouter();
   const pathname = usePathname();
-  const [result, setResult] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("/api/unregistered-data");
-        setResult(response.data);
-      } catch (error) {
-        console.error("Terjadi kesalahan:", error);
-      } finally {
-      }
-    };
-
-    fetchData();
-  }, [pathname]);
 
   return (
     <div className="bg-white bg-no-repeat custom-dropshadow footer-bg dark:bg-slate-700 flex justify-around items-center backdrop-filter backdrop-blur-[40px] fixed left-0 w-full z-[9999] bottom-0 py-[12px] px-4">
-      <Link href="/admin/permohonan?unregister=true">
+      <Link href="/admin/armada">
         <div>
           <span
             className={` relative cursor-pointer rounded-full text-[20px] flex flex-col items-center justify-center mb-1
          ${
-           pathname === "/admin/permohonan"
+           pathname === "/admin/armada"
              ? "text-primary-500"
              : "dark:text-white text-slate-900"
          }
           `}
           >
-            <Icon icon="solar:database-broken" />
-            {result?.countPermohonan ? (
-              <span className="absolute right-[5px] lg:top-0 -top-2 h-4 w-4 bg-red-500 text-[8px] font-semibold flex flex-col items-center justify-center rounded-full text-white z-[99]">
-                {result?.countPermohonan}
-              </span>
-            ) : null}
+            <Icon icon="solar:bus-broken" />
           </span>
           <span
             className={` block text-[11px]
@@ -57,7 +35,7 @@ const MobileFooter = () => {
           }
           `}
           >
-            Permohonan
+            Armada
           </span>
         </div>
       </Link>
@@ -69,7 +47,7 @@ const MobileFooter = () => {
           <FilePreview
             fileUrl={
               user?.foto
-                ? `/api/services/file/uploads/${PATH_UPLOAD.admin}/${user?.foto}`
+                ? `/api/services/file/uploads/${PATH_UPLOAD.user}/${user?.foto}`
                 : null
             }
             filename={user?.foto || "Pengguna"}
@@ -85,23 +63,18 @@ const MobileFooter = () => {
           />
         </div>
       </Link>
-      <Link href="/admin/penelitian?unregister=true">
+      <Link href="/admin/halte">
         <div>
           <span
             className={` relative cursor-pointer rounded-full text-[20px] flex flex-col items-center justify-center mb-1
       ${
-        pathname === "/admin/penelitian"
+        pathname === "/admin/halte"
           ? "text-primary-500"
           : "dark:text-white text-slate-900"
       }
           `}
           >
-            <Icon icon="solar:square-academic-cap-2-broken" />
-            {result?.countPenelitian ? (
-              <span className="absolute right-[5px] lg:top-0 -top-2 h-4 w-4 bg-red-500 text-[8px] font-semibold flex flex-col items-center justify-center rounded-full text-white z-[99]">
-                {result?.countPenelitian}
-              </span>
-            ) : null}
+            <Icon icon="solar:streets-navigation-broken" />
           </span>
           <span
             className={` block text-[11px]
@@ -112,7 +85,7 @@ const MobileFooter = () => {
          }
         `}
           >
-            Keberatan
+            Halte
           </span>
         </div>
       </Link>

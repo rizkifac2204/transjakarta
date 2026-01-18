@@ -171,17 +171,20 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
 
   return (
     <li className="p-4 border rounded-md shadow-sm">
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
         <div className="flex-1">
-          <p className="font-semibold ">
+          <p className="font-semibold">
             {question?.order}. {question.basic}
           </p>
+
           <p className="text-sm mt-1">
             INDIKATOR: <b>{question.indicator}</b>
           </p>
+
           <p className="text-sm mt-1">- {question?.spm_criteria}</p>
         </div>
-        <div className="w-40">
+
+        <div className="w-full lg:w-40">
           <Select
             options={ANSWER_OPTIONS}
             value={answer === null ? "" : String(answer)}
@@ -189,6 +192,7 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
           />
         </div>
       </div>
+
       {answer === false && (
         <div className="mt-4 space-y-4 border-t pt-4">
           <TextArea

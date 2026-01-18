@@ -4,7 +4,7 @@ import { getArmadaById } from "@/libs/armada";
 import { notFound } from "next/navigation";
 import { getQuestionsBySurvey } from "@/libs/armada-question";
 
-import ArmadaDetails from "./_Detail";
+import ArmadaDetails from "../_Detail";
 import ArmadaForm from "./_Form";
 
 export const dynamic = "force-dynamic";
