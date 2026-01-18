@@ -5,9 +5,10 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Card from "@/components/ui/Card";
-import QuestionRow from "./_QuestionRow";
 import Button from "@/components/ui/Button";
 import Alert from "@/components/ui/Alert";
+
+import QuestionRowInput from "./_QuestionRowInput";
 
 const ArmadaForm = ({ questions }) => {
   const [finishing, setFinishing] = useState(null);
@@ -60,7 +61,7 @@ const ArmadaForm = ({ questions }) => {
                   (a) => a.question_id === question.id,
                 );
                 return (
-                  <QuestionRow
+                  <QuestionRowInput
                     key={question.id}
                     question={question}
                     armada_survey_id={armada.id}

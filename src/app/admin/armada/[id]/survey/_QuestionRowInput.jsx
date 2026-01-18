@@ -15,8 +15,8 @@ const ANSWER_OPTIONS = [
   { value: false, label: "Tidak" },
 ];
 
-const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
-  const { setArmada } = useArmadaContext();
+const QuestionRowInput = ({ question, armada_survey_id, initialAnswer }) => {
+  const { armada, setArmada } = useArmadaContext();
   const [answer, setAnswer] = useState(initialAnswer?.answer ?? null);
   const [note, setNote] = useState(initialAnswer?.note ?? "");
   const [progress, setProgress] = useState(0);
@@ -104,14 +104,9 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
     setIsSaving(true);
     setError(null);
     try {
-      const response = await fetch(
+      await axios.delete(
         `/api/armada/${armada_survey_id}/survey/${question.id}`,
-        { method: "DELETE" },
       );
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.error || "Gagal menghapus jawaban.");
-      }
       setLastSaved({ answer: null, note: "", photo_url: null });
       setAnswer(null);
       setPhotoUrl(null);
@@ -119,10 +114,13 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
       setArmada((prev) => ({ ...prev, finish: false }));
     } catch (err) {
       setError(err.response?.data?.message || err.message);
+      setAnswer(lastSaved?.answer ?? null);
+      setNote(lastSaved?.note ?? "");
+      setPhotoUrl(lastSaved?.photo_url ?? null);
     } finally {
       setIsSaving(false);
     }
-  }, [armada_survey_id, question.id, setArmada]);
+  }, [armada_survey_id, question.id, setArmada, lastSaved]);
 
   useEffect(() => {
     if (answer === true) return;
@@ -213,7 +211,7 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
               onChange={handlePhotoUpload}
               initialImageUrl={
                 photoUrl
-                  ? `/api/services/file/uploads/${PATH_UPLOAD.armada}/${photoUrl}`
+                  ? `/api/services/file/uploads/${PATH_UPLOAD.armada}/${armada.id}/${photoUrl}`
                   : null
               }
               disabled={isUploading}
@@ -241,4 +239,4 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
   );
 };
 
-export default QuestionRow;
+export default QuestionRowInput;

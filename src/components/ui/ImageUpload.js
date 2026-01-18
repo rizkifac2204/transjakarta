@@ -59,8 +59,8 @@ const ImageUpload = ({
   };
 
   const handleRemoveImage = () => {
+    // setPreviewUrl(null); // remove automatic
     setSelectedFile(null);
-    setPreviewUrl(null);
     onChange(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";

@@ -19,6 +19,9 @@ const ArmadaDetails = () => {
   const pathname = usePathname();
   const [isDeleting, setIsDeleting] = useState(false);
   const { armada } = useArmadaContext();
+  const title = pathname.includes("/survey")
+    ? "LEMBAR SURVEY"
+    : "DETAIL SURVEY";
 
   const ListActions = ({ isManage }) => {
     let linkback;
@@ -69,7 +72,7 @@ const ArmadaDetails = () => {
               <button
                 className="action-btn"
                 type="button"
-                onClick={onDeleteSet}
+                onClick={hanldeDelete}
               >
                 {isDeleting ? (
                   <Icon
@@ -87,7 +90,7 @@ const ArmadaDetails = () => {
     );
   };
 
-  const onDeleteSet = async () => {
+  const hanldeDelete = async () => {
     const confirmed = confirm("Yakin Menghapus Data Ini?");
     if (!confirmed) return;
 
@@ -107,7 +110,7 @@ const ArmadaDetails = () => {
     <Card
       title={
         <div className="flex items-center space-x-2">
-          <span>JENIS SPM: ARMADA</span>
+          <span>{title} - SPM: ARMADA</span>
           <div>
             <Badge
               icon={"solar:checklist-minimalistic-broken"}

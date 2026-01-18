@@ -2,9 +2,9 @@ import { verifyAuth } from "@/libs/jwt";
 import prisma from "@/libs/prisma";
 import getLogs from "@/libs/getLogs";
 import { parseJsonBody } from "@/utils/parseJsonBody";
-import { PATH_UPLOAD } from "@/configs/appConfig";
 import { hapusFile } from "@/services/uploadservices";
 import { getQuestionsBySurvey } from "@/libs/armada-question";
+import { pathArmada } from "./[question_id]/upload/route";
 
 export async function resetFinishArmada(id) {
   await prisma.armada_survey.update({
@@ -36,6 +36,9 @@ export async function POST(request, { params }) {
     if (auth.role > 3 && auth.id !== armada.surveyor_id) {
       return Response.json({ message: "Forbidden" }, { status: 403 });
     }
+
+    // get path dynamic
+    const path = pathArmada(armada);
 
     const body = await request.json();
     const parsedBody = parseJsonBody(body, {
@@ -87,7 +90,7 @@ export async function POST(request, { params }) {
     });
 
     if (answerRecord?.photo_url && answer) {
-      await hapusFile(answerRecord?.photo_url, PATH_UPLOAD.armada);
+      await hapusFile(answerRecord?.photo_url, path);
     }
 
     resetFinishArmada(parsedId);

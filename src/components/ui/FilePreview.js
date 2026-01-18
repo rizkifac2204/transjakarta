@@ -24,6 +24,8 @@ export default function FilePreview({
   label,
   className,
   noLink = false,
+  width,
+  height,
 }) {
   const ext = getFileExtension(filename);
   const [imgSrc, setImgSrc] = useState(fileUrl || "/assets/images/user.png");
@@ -37,8 +39,8 @@ export default function FilePreview({
         <Image
           src={imgSrc}
           alt={filename || "Image"}
-          width={250}
-          height={250}
+          width={width ? width : 250}
+          height={height ? height : 250}
           className={className ? className : "rounded-md object-cover"}
           onError={() => setImgSrc("/assets/images/user.png")}
           priority
@@ -71,8 +73,8 @@ export default function FilePreview({
           <Image
             src={fileUrl}
             alt={filename}
-            width={250}
-            height={250}
+            width={width ? width : 250}
+            height={height ? height : 250}
             className={className ? className : "rounded-md object-cover"}
             style={{ width: "auto" }}
             onError={(e) => (e.target.src = "/assets/images/user.png")}

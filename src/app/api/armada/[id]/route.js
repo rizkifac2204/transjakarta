@@ -2,6 +2,9 @@ import { verifyAuth } from "@/libs/jwt";
 import { parseJsonBody } from "@/utils/parseJsonBody";
 import { getArmadaById, updateArmada, deleteArmada } from "@/libs/armada";
 import getLogs from "@/libs/getLogs";
+import { pathArmada } from "./survey/[question_id]/upload/route";
+import fs from "fs/promises";
+import path from "path";
 
 export async function PATCH(request, { params }) {
   try {
@@ -99,10 +102,21 @@ export async function DELETE(request, { params }) {
       return Response.json({ message: "Forbidden" }, { status: 403 });
     }
 
-    // harus delete file upload dulu
-    // lanjutkan untuk masalah finish
+    // get path
+    const folderPath = path.join(
+      process.cwd(),
+      "src",
+      "uploads",
+      pathArmada(armada),
+    );
 
     const deleted = await deleteArmada(parsedId);
+
+    // delete all folder
+    await fs.rm(folderPath, {
+      recursive: true,
+      force: true,
+    });
 
     return Response.json({
       message: "Berhasil menghapus data",

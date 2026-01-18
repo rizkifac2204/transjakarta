@@ -1,9 +1,9 @@
 import { verifyAuth } from "@/libs/jwt";
 import getLogs from "@/libs/getLogs";
 import prisma from "@/libs/prisma";
-import { PATH_UPLOAD } from "@/configs/appConfig";
 import { hapusFile } from "@/services/uploadservices";
 import { resetFinishArmada } from "../route";
+import { pathArmada } from "./upload/route";
 
 export async function DELETE(_request, { params }) {
   try {
@@ -35,6 +35,9 @@ export async function DELETE(_request, { params }) {
       return Response.json({ message: "Forbidden" }, { status: 403 });
     }
 
+    // get path dynamic
+    const path = pathArmada(armada);
+
     const answerRecord = await prisma.armada_survey_answer.findUnique({
       where: {
         armada_survey_id_question_id: {
@@ -60,8 +63,7 @@ export async function DELETE(_request, { params }) {
       },
     });
 
-    if (answerRecord?.photo_url)
-      await hapusFile(answerRecord?.photo_url, PATH_UPLOAD.armada);
+    if (answerRecord?.photo_url) await hapusFile(answerRecord?.photo_url, path);
 
     resetFinishArmada(parsedSurveyId);
 

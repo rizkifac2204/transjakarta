@@ -10,6 +10,11 @@ import uploadServices, {
 } from "@/services/uploadservices";
 import { resetFinishArmada } from "../../route";
 
+export function pathArmada(armada) {
+  if (!armada) return PATH_UPLOAD.armada;
+  return PATH_UPLOAD.armada + `/` + armada?.id;
+}
+
 export async function POST(request, { params }) {
   let uploadedFiles = [];
   try {
@@ -41,6 +46,7 @@ export async function POST(request, { params }) {
       return Response.json({ message: "Forbidden" }, { status: 403 });
     }
 
+    const path = pathArmada(armada);
     const formData = await request.formData();
     const foto = formData.get("photo");
     const isUploadExist = isValidFile(foto);
@@ -68,7 +74,7 @@ export async function POST(request, { params }) {
     let resultUpload = await uploadServices(foto, {
       allowedTypes: [...MIME_PRESETS.image],
       maxSize: MAX_FOTO_SIZE,
-      folder: PATH_UPLOAD.armada,
+      folder: path,
     });
 
     if (!resultUpload.success) {
@@ -90,8 +96,7 @@ export async function POST(request, { params }) {
       data: { photo_url: resultUpload.files[0].filename },
     });
 
-    if (answerRecord?.photo_url)
-      await hapusFile(answerRecord?.photo_url, PATH_UPLOAD.armada);
+    if (answerRecord?.photo_url) await hapusFile(answerRecord?.photo_url, path);
 
     resetFinishArmada(parsedSurveyId);
 
@@ -131,6 +136,20 @@ export async function DELETE(_request, { params }) {
       return Response.json({ message: "ID tidak valid" }, { status: 400 });
     }
 
+    // authorize surveyor atau admin
+    const armada = await prisma.armada_survey.findUnique({
+      where: { id: parsedSurveyId },
+    });
+    if (!armada) {
+      return Response.json({ message: "Not Found" }, { status: 404 });
+    }
+    if (auth.role > 3 && auth.id !== armada.surveyor_id) {
+      return Response.json({ message: "Forbidden" }, { status: 403 });
+    }
+
+    // get path dynamic
+    const path = pathArmada(armada);
+
     const answerRecord = await prisma.armada_survey_answer.findUnique({
       where: {
         armada_survey_id_question_id: {
@@ -156,8 +175,7 @@ export async function DELETE(_request, { params }) {
       data: { photo_url: null },
     });
 
-    if (answerRecord?.photo_url)
-      await hapusFile(answerRecord?.photo_url, PATH_UPLOAD.armada);
+    if (answerRecord?.photo_url) await hapusFile(answerRecord?.photo_url, path);
 
     resetFinishArmada(parsedSurveyId);
 
