@@ -5,7 +5,7 @@ import useDarkMode from "@/themes/dashcode/hooks/useDarkMode";
 import useRtl from "@/themes/dashcode/hooks/useRtl";
 import useSkin from "@/themes/dashcode/hooks/useSkin";
 
-export default function AuthLayout({ children, modalFormSurvey }) {
+export default function AuthLayout({ children }) {
   const [isDark] = useDarkMode();
   const [isRtl] = useRtl();
   const [skin] = useSkin();
@@ -28,7 +28,6 @@ export default function AuthLayout({ children, modalFormSurvey }) {
           pauseOnHover
           theme={isDark ? "dark" : "light"}
         />
-        {modalFormSurvey}
         {children}
       </div>
     </>

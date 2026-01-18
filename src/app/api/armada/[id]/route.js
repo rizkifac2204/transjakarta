@@ -99,6 +99,9 @@ export async function DELETE(request, { params }) {
       return Response.json({ message: "Forbidden" }, { status: 403 });
     }
 
+    // harus delete file upload dulu
+    // lanjutkan untuk masalah finish
+
     const deleted = await deleteArmada(parsedId);
 
     return Response.json({

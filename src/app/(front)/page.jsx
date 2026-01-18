@@ -108,7 +108,7 @@ function Page() {
           <div className="grid xl:grid-cols-3 md:grid-cols-3 grid-cols-1 gap-5">
             {tables2.map((item, i) => (
               <div
-                className={`price-table rounded-[6px] shadow-base dark:bg-slate-800 p-6 text-slate-900 dark:text-white relative overflow-hidden z-[1]`}
+                className={`price-table border dark:border-none rounded-[6px] shadow-lg dark:bg-slate-800 p-6 dark:text-white`}
                 key={i}
               >
                 <header className="mb-6">
@@ -140,7 +140,7 @@ function Page() {
                     <Button
                       text={item.button}
                       className={` w-full btn-outline-dark dark:border-slate-400`}
-                      onClick={() => router.push(item.link)}
+                      onClick={() => router.push(item.link, { scroll: false })}
                     />
                   </div>
                 </div>

@@ -26,7 +26,7 @@ const Select = forwardRef(
       size,
       ...rest
     },
-    ref
+    ref,
   ) => {
     const selectElement = (
       <select
@@ -80,9 +80,8 @@ const Select = forwardRef(
         <div className={`relative ${horizontal ? "flex-1" : ""}`}>
           {selectElement}
 
-          {/* icon */}
-          <div className="flex text-xl absolute ltr:right-[14px] rtl:left-[14px] top-1/2 -translate-y-1/2 space-x-1 rtl:space-x-reverse">
-            <span className="relative -right-2 inline-block text-slate-900 dark:text-slate-300 pointer-events-none">
+          <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-xl">
+            <span className="text-slate-900 dark:text-slate-300">
               <Icon icon="heroicons:chevron-down" />
             </span>
             {error && (
@@ -128,7 +127,7 @@ const Select = forwardRef(
         )}
       </div>
     );
-  }
+  },
 );
 
 Select.displayName = "Select"; // penting untuk debugging komponen forwardRef

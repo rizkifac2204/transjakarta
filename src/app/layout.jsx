@@ -17,7 +17,7 @@ export const metadata = {
   description: appConfig.app.description,
 };
 
-export default function RootAdminLayout({ children }) {
+export default function RootAdminLayout({ children, modalFormSurvey }) {
   return (
     <html>
       <head>
@@ -29,7 +29,10 @@ export default function RootAdminLayout({ children }) {
       </head>
       <body>
         <AuthContextProvider>
-          <ThemeProvider>{children}</ThemeProvider>
+          <ThemeProvider>
+            {children}
+            {modalFormSurvey}
+          </ThemeProvider>
         </AuthContextProvider>
       </body>
     </html>

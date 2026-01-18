@@ -23,14 +23,14 @@ export default function Modal({ children }) {
         if (onDismiss) onDismiss();
       }
     },
-    [onDismiss, overlay, wrapper]
+    [onDismiss, overlay, wrapper],
   );
 
   const onKeyDown = useCallback(
     (e) => {
       if (e.key === "Escape") onDismiss();
     },
-    [onDismiss]
+    [onDismiss],
   );
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function Modal({ children }) {
     >
       <div
         ref={wrapper}
-        className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-[95%] sm:w-10/12 md:w-8/12 lg:w-2/5
+        className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-[95%] sm:w-10/12 md:w-8/12 lg:w-3/5
         max-h-[80vh] sm:max-h-[85vh] lg:max-h-[90vh]
         overflow-y-auto
         bg-white dark:bg-slate-800
