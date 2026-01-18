@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Card from "@/components/ui/Card";
 import TablePagination from "@/components/ui/Table/Pagination";
+import ButtonExport from "@/components/ui/Table/ButtonExport";
 import TableSearchGlobal from "@/components/ui/Table/Search";
 import Link from "next/link";
 import Tooltip from "@/components/ui/Tooltip";
@@ -43,6 +44,28 @@ const ArmadaTable = ({ initialData }) => {
       setIsLoading(false);
     }
   }, [initialData]);
+
+  // const exportData = useMemo(() => {
+  //   return safeData.map((row) => ({
+  //     Tanggal: new Date(row.tanggal).toLocaleDateString("id-ID"),
+  //     "Jam Mulai": new Date(row.jam_mulai).toLocaleTimeString("id-ID", {
+  //       hour: "2-digit",
+  //       minute: "2-digit",
+  //     }),
+  //     "Jam Selesai": new Date(row.jam_selesai).toLocaleTimeString("id-ID", {
+  //       hour: "2-digit",
+  //       minute: "2-digit",
+  //     }),
+  //     "No Body": row.no_body,
+  //     "Kode Trayek": row.kode_trayek,
+  //     "Asal - Tujuan": row.asal_tujuan,
+  //     "Service Type": row.service_type?.name ?? "-",
+  //     "Fleet Type": row.fleet_type?.name ?? "-",
+  //     Surveyor: row.surveyor?.nama ?? "-",
+  //     Periode: row.periode,
+  //     Selesai: row.finish ? "Ya" : "Tidak",
+  //   }));
+  // }, [safeData]);
 
   const handleDelete = async (id) => {
     const confirmed = confirm("Apakah Anda yakin ingin menghapus data ini?");
@@ -91,6 +114,23 @@ const ArmadaTable = ({ initialData }) => {
     COLUMNHELPER.accessor((row) => row.fleet_type?.name ?? "", {
       id: "tipe_armada",
       header: "TIPE ARMADA",
+    }),
+    COLUMNHELPER.accessor("finish", {
+      id: "finish",
+      header: "STATUS",
+      cell: ({ row }) => {
+        const item = row.original;
+        if (item.finish)
+          return (
+            <Icon
+              icon="solar:check-circle-broken"
+              className="text-success-500"
+            />
+          );
+        return (
+          <Icon icon="solar:close-circle-broken" className="text-red-500" />
+        );
+      },
     }),
     {
       id: "action",
@@ -195,7 +235,13 @@ const ArmadaTable = ({ initialData }) => {
     <Card
       title="DATA SURVEY ARMADA"
       headerslot={
-        <TableSearchGlobal filter={globalFilter} setFilter={setGlobalFilter} />
+        <div className="flex">
+          <TableSearchGlobal
+            filter={globalFilter}
+            setFilter={setGlobalFilter}
+          />
+          <ButtonExport fileName="Survey-Armada" data={safeData} />
+        </div>
       }
     >
       <div className="overflow-x-auto -mx-6">
