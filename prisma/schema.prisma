@@ -7,31 +7,32 @@ datasource db {
 }
 
 model level {
-  id    Int     @id
-  level String  @db.VarChar(30)
+  id    Int    @id
+  level String @db.VarChar(30)
   users user[]
 }
 
 model user {
-  id             Int             @id @default(autoincrement())
-  level_id       Int
-  nama           String?         @db.VarChar(50)
-  telp           String?         @db.Char(15)
-  alamat         String?         @db.Text
-  email          String?         @db.VarChar(100)
-  username       String          @unique @db.VarChar(50)
-  password       String          @db.VarChar(225)
-  mfa_enabled    Boolean         @default(false)
-  mfa_secret     String?         @db.VarChar(100)
-  valid          Boolean         @default(false)
-  login          Boolean         @default(false)
-  foto           String?         @db.Text
-  last_access    DateTime?       @db.Timestamp(0)
-  created_at     DateTime?       @default(now()) @db.Timestamp(0)
-  updated_at     DateTime?       @db.Timestamp(0)
-  deleted_at     DateTime?       @db.Timestamp(0)
-  level          level           @relation(fields: [level_id], references: [id], onUpdate: NoAction, map: "admin_ibfk_1")
-  armada_surveys armada_survey[]
+  id              Int              @id @default(autoincrement())
+  level_id        Int
+  nama            String?          @db.VarChar(50)
+  telp            String?          @db.Char(15)
+  alamat          String?          @db.Text
+  email           String?          @db.VarChar(100)
+  username        String           @unique @db.VarChar(50)
+  password        String           @db.VarChar(225)
+  mfa_enabled     Boolean          @default(false)
+  mfa_secret      String?          @db.VarChar(100)
+  valid           Boolean          @default(false)
+  login           Boolean          @default(false)
+  foto            String?          @db.Text
+  last_access     DateTime?        @db.Timestamp(0)
+  created_at      DateTime?        @default(now()) @db.Timestamp(0)
+  updated_at      DateTime?        @db.Timestamp(0)
+  deleted_at      DateTime?        @db.Timestamp(0)
+  level           level            @relation(fields: [level_id], references: [id], onUpdate: NoAction, map: "admin_ibfk_1")
+  armada_surveys  armada_survey[]
+  shelter_surveys shelter_survey[]
 
   @@index([level_id], map: "level_id")
 }
@@ -72,7 +73,7 @@ model armada_question {
   indicator      String?                @db.Text
   spm_criteria   String                 @db.Text
   spm_reference  String?
-  order          String?                @default("a")
+  order          String?                
   question_set   armada_question_set    @relation(fields: [set_id], references: [id], onDelete: Cascade)
   survey_answers armada_survey_answer[]
 
@@ -86,8 +87,8 @@ model armada_survey {
   fleet_type_id   Int
   tanggal         DateTime
   periode         String
-  jam_mulai       DateTime             @default(now()) @db.Timestamp(0)
-  jam_selesai     DateTime             @db.Timestamp(0)
+  jam_mulai       DateTime               @default(now()) @db.Timestamp(0)
+  jam_selesai     DateTime               @db.Timestamp(0)
   no_body         String
   kode_trayek     String
   asal_tujuan     String
@@ -95,7 +96,7 @@ model armada_survey {
   created_at      DateTime               @default(now())
   service_type    service_type           @relation(fields: [service_type_id], references: [id])
   fleet_type      fleet_type             @relation(fields: [fleet_type_id], references: [id])
-  surveyor        user                  @relation(fields: [surveyor_id], references: [id])
+  surveyor        user                   @relation(fields: [surveyor_id], references: [id])
   answers         armada_survey_answer[]
 
   @@map("armada_survey")
@@ -115,11 +116,76 @@ model armada_survey_answer {
   @@map("armada_survey_answer")
 }
 
-
 enum section_armada {
   KEAMANAN
   KESELAMATAN
   KENYAMANAN
+  KESETARAAN
+  KETERATURAN
+}
+
+model shelter_type {
+  id        Int                @id @default(autoincrement())
+  name      String             @unique
+  questions shelter_question[]
+  surveys   shelter_survey[]
+
+  @@map("shelter_type")
+}
+
+model shelter_question {
+  id              Int                     @id @default(autoincrement())
+  shelter_type_id Int?
+  section         section_shelter
+  basic           String?                 @db.Text
+  indicator       String?                 @db.Text
+  spm_criteria    String                  @db.Text
+  spm_reference   String?
+  order           String?
+  shelter_type    shelter_type?           @relation(fields: [shelter_type_id], references: [id], onDelete: SetNull)
+  survey_answers  shelter_survey_answer[]
+
+  @@map("shelter_question")
+}
+
+model shelter_survey {
+  id              Int                     @id @default(autoincrement())
+  surveyor_id     Int
+  shelter_type_id Int
+  nama_halte      String
+  kode_halte      String
+  tanggal         DateTime
+  periode         String
+  jam_mulai       DateTime
+  jam_selesai     DateTime
+  finish          Boolean                 @default(false)
+  created_at      DateTime                @default(now())
+  surveyor        user                    @relation(fields: [surveyor_id], references: [id])
+  shelter_type    shelter_type            @relation(fields: [shelter_type_id], references: [id])
+  answers         shelter_survey_answer[]
+
+  @@map("shelter_survey")
+}
+
+model shelter_survey_answer {
+  id                Int              @id @default(autoincrement())
+  shelter_survey_id Int
+  question_id       Int
+  answer            Boolean
+  note              String?
+  photo_url         String?
+  shelter_survey    shelter_survey   @relation(fields: [shelter_survey_id], references: [id], onDelete: Cascade)
+  question          shelter_question @relation(fields: [question_id], references: [id])
+
+  @@unique([shelter_survey_id, question_id])
+  @@map("shelter_survey_answer")
+}
+
+enum section_shelter {
+  KEAMANAN
+  KESELAMATAN
+  KENYAMANAN
+  KETERJANGKAUAN
   KESETARAAN
   KETERATURAN
 }

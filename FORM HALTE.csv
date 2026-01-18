@@ -1,0 +1,145 @@
+FORMULIR ISIAN PENGUKURAN CAPAIAN SPM HALTE TRANSJAKARTA 2025;;;;;;;;;;;
+;;;;;;;;;;;
+JENIS SPM;;: HALTE;;;NAMA SURVEYOR;;;:;;;
+NAMA HALTE;;: ;;;HARI/TANGGAL;;;: ;;;
+KODE HALTE;;:;;;PERIODE;;;: SIBUK / TIDAK SIBUK;;;
+TIPE HALTE;;: UJUNG/TRANSIT/INTEGRASI/ANTARA;;;JAM MULAI;;;:;;;
+;;;;;JAM SELESAI;;;;;;
+;;;;;;;;;;;
+NO;JENIS PELAYANAN DASAR;INDIKATOR;TIPE HALTE;NILAIAN SPM YANG DIUKUR;REFERENSI ;HASIL;;CATATAN;;;
+Keamanan;;;;;;;;;;;
+a; Petugas Layanan;Jumlah petugas layanan operasi dan petugas keamanan ;Ujung;Minimal 4 (empat) orang petugas yang menjalankan fungsi untuk membantu pelayanan pelanggan ;1.a;1;0;;;;
+;;;Transit;Minimal 2 (dua) orang petugas layanan operasi;;;;;;;
+;;;Integrasi;Minimal 2 (dua) orang petugas layanan operasi ;;;;;;;
+;;;Antara;Minimal 1 (satu) orang petugas layanan operasi ;;;;;;;
+b;Informasi Gangguan Keamanan ;Jumlah stiker per halte tertempel dalam kondisi baik dan mudah terlihat oleh pelanggan ;Ujung;Minimal 1 (satu) stiker pada area masuk dan 3 (tiga) stiker pada area menunggu bus ;1.b;1;0;;;;
+;;;Transit;Minimal 1 (satu) stiker pada area masuk dan 3 (tiga) stiker pada area menunggu bus;;;;;;;
+;;;Integrasi;Minimal 1 (satu) stiker pada area masuk dan 3 (tiga) stiker pada area menunggu bus ;;;;;;;
+;;;Antara;Minimal 1 (satu) stiker pada area masuk dan 2 (dua) stiker pada area menunggu bus ;;;;;;;
+c;Televisi Sirkuit Tertutup (Closed Circuit Television/CCTV) ;Jumlah CCTV per halte yang berfungsi dengan baik dan mengarah pada area tertentu halte yang dapat ditampilkan pada monitor dan bisa diakses oleh petugas halte yang terintegrasi melalui command center dengan waktu penyimpanan file video selama 30 (tiga puluh) hari setelah perekaman;Ujung;Tersedia 4 (empat) unit, 1 (satu) mengarah ke area masuk halte, 3 (tiga) mengarah ke area tunggu bus ;1.c;1;0;;;;
+;;;Transit;Tersedia 3 (tiga) unit, 1 (satu) mengarah ke area masuk halte, 2 (dua) mengarah ke area tunggu bus ;;;;;;;
+;;;Integrasi;Tersedia 4 (empat) unit, 1 (satu) mengarah ke area masuk halte, 3 (tiga) mengarah ke area tunggu bus;;;;;;;
+;;;Antara;Tersedia 4 (empat) unit, 1 (satu) mengarah ke area masuk halte, 3 (tiga) mengarah ke area tunggu bus ;;;;;;;
+d;SOP Penanganan Keamanan ;"a) Ketersediaan dokumen SOP di dalam halte; 
+b) Penerapan SOP oleh petugas layanan halte; dan 
+c) Media informasi sosialisasi penanganan keamanan kepada pelanggan di halte.";Semua Tipe;"i. Minimal 1 (satu) dokumen SOP
+ii. Parameter perhitungan kelalaian penerapan SOP diatur dalam perjanjian; dan
+iii. Minimal 1 (satu) media informasi mengenai SOP jika terjadi tindak gangguan keamanan.";1.d;1;0;;;;
+Keselamatan;;;;;;;;;;;
+a;SOP Penanganan Keadaan Darurat;"a) Ketersediaan dokumen SOP di dalam halte; dan 
+b) Penerapan SOP oleh petugas layanan halte. ";Semua Tipe;"i. minimal 1 (satu) dokumen SOP; dan
+ii. parameter perhitungan kelalaian penerapan SOP diatur dalam perjanjian. ";2.a;1;0;;;;
+b;Pintu Darurat;Pintu darurat dapat dibuka dengan mudah dan memiliki lebar minimum untuk mengakomodir kebutuhan kelompok khusus;Semua Tipe;Pintu darurat memiliki lebar minimum 92 cm (sembilan puluh dua sentimeter) dan jalur keluar masuknya steril dari halangan ;2.b;1;0;;;;
+c;Peralatan Keselamatan ;Jumlah fasilitas dan berfungsi dengan baik ;Ujung;"i. Tabung pemadam kebakaran 3 (tiga) buah; 
+ii. Palu pemecah kaca 3 (tiga) buah; dan 
+iii. Lampu darurat 1 (satu) buah. ";2.c;1;0;;;;
+;;;Transit;"i. Tabung pemadam kebakaran 2 (dua) buah; 
+ii. Palu pemecah 2 (dua) buah; dan 
+iii. Lampu darurat 1 (satu) buah. ";;;;;;;
+;;;Integrasi;"i. Tabung pemadam kebakaran 2 (dua) buah; 
+ii. Palu pemecah 2 (dua) buah; dan 
+iii. Lampu darurat 1 (satu) buah. ";;;;;;;
+;;;Antara;"i. Tabung pemadam kebakaran 1 (satu) buah; 
+ii. Palu pemecah 1 (satu) buah; dan 
+iii. Lampu darurat 1 (satu) buah. ";;;;;;;
+d;Fasilitas Kesehatan ;Tersedianya kotak perlengkapan P3K per halte yang tidak melebihi masa kedaluwarsa di lokasi yang mudah terlihat;Semua Tipe;satu set ;2.d;1;0;;;;
+Kenyamanan;;;;;;;;;;;
+a;Lampu Penerangan;"a) Jumlah lampu yang berfungsi; dan 
+b) Tingkat pencahayaan per halte. ";Semua Tipe;"i. 100% (seratus persen) berfungsi; dan
+ii. Menyala dengan rata-rata 100 Lux (seratus lux) (diukur dengan alat yang terkalibrasi oleh lembaga standardisasi). ";3.a;1;0;;;;
+b;Fasilitas Penunjang dan Sirkulasi Udara ;Tersedianya fasilitas penunjang sirkulasi udara ;Ujung;Tersedia dan dioperasikan di jam operasional pada ruang tunggu keberangkatan bus, minimal 3 (tiga) unit ;3.b;1;0;;;;
+;;;Transit;Tersedia dan dioperasikan di jam operasional pada ruang tunggu keberangkatan bus, minimal 3 (tiga) unit ;;;;;;;
+;;;Integrasi;Tersedia dan dioperasikan di jam operasional pada ruang tunggu keberangkatan bus, minimal 3 (tiga) unit ;;;;;;;
+;;;Antara;Tersedia dan dioperasikan di jam operasional pada ruang tunggu keberangkatan bus, minimal 2 (tiga) unit ;;;;;;;
+c;Kebersihan Halte ;Halte berada dalam kondisi bersih dan rapi dengan tidak adanya sampah, kotoran, dan genangan air ;Semua Tipe;"Area halte yang perlu berada dalam kondisi bersih dan rapi  :
+i. jalur masuk tap in tap out;
+ii. ruang tunggu; dan
+iii. jalur masuk keluar penumpang ke bus (dermaga).";3.c;1;0;;;;
+d;Jumlah Orang Per Luas Lantai ;Jumlah orang per luas lantai ;Semua Tipe;"i. Maksimal 4 (empat) orang/m2 (jam sibuk); dan 
+ii. Maksimal 2 (dua) orang/m2 (jam tidak sibuk).";3.d;1;0;;;;
+e;Antrean Penumpang Memasuki Bus ;"a) Tersedianya garis pembatas yang memisahkan antara
+area tunggu di halte dan area keluar masuk penumpang
+menuju bus; dan 
+b) Tersedianya stiker antrean antarpenumpang saat mengantre menuju pintu masuk bus.";Semua Tipe;"i. Tersedianya alur antrean masuk bus penumpang yang tidak menganggu pergerakan penumpang di dalam halte; dan 
+ii. Stiker antrean pengutamaan kelompok prioritas dalam memasuki bus. ";3.e;1;0;;;;
+f;Fasilitas Kemudahan Naik/Turun Penumpang ;Tinggi lantai halte (dermaga) sama dengan tinggi lantai penumpang bus ;Semua Tipe;Tinggi vertikal antara bus dengan halte maksimal sebesar 10 cm (sepuluh sentimeter) ;3.f;1;0;pengukuran tinggi dihitung dari aspal ke lantai Dramaga Tidak kurang dari 100 cm dan tidak lebih dari 120 cm. (É........);;;
+g;Area Beristirahat (Kelompok Prioritas) ;"a) Tersedianya bangku beristirahat menunggu bus untuk kelompok prioritas yang dapat disesuaikan dengan luasan area menunggu halte; dan 
+b) Tersedianya informasi stiker penggunaan kursi untuk kelompok prioritas. ";Ujung;"i. Jumlah minimum ruang duduk untuk beristirahat sejumlah 9 (sembilan) orang; dan 
+ii. Jumlah minimum stiker peruntukkan kursi untuk kelompok prioritas sejumlah 3 (tiga) stiker. ";3.g;1;0;;;;
+;;;Transit;"i. Jumlah minimum ruang duduk untuk beristirahat sejumlah 3 (tiga) orang; dan 
+ii. Jumlah minimum stiker peruntukkan kursi untuk kelompok prioritas sejumlah 1 (satu) stiker. ";;;;;;;
+;;;Integrasi;"i. Jumlah minimum ruang duduk untuk beristirahat sejumlah 6 (enam) orang; dan 
+ii. Jumlah minimum stiker peruntukkan kursi untuk kelompok prioritas sejumlah 2 (dua) stiker. ";;;;;;;
+;;;Antara;"i. Jumlah minimum ruang duduk untuk beristirahat sejumlah 3 (tiga) orang; dan 
+ii. Jumlah minimum stiker peruntukkan kursi untuk kelompok prioritas sejumlah 1 (satu) stiker. ";;;;;;;
+h;Toilet ;Toilet berfungsi dengan kondisi yang bersih ;Ujung;Minimal 1 (satu) toilet berfungsi dengan kebersihan yang baik ;3.h;1;0;;;;
+;;;Transit;-;;;;;;;
+;;;Integrasi;Minimal 1 (satu) toilet berfungsi dengan kebersihan yang baik ;;;;;;;
+;;;Antara;-;;;;;;;
+Keterjangkauan ;;;;;;;;;;;
+a;Ketersediaan Integrasi Angkutan ;Tersedianya angkutan umum lanjutan di setiap halte ;Semua Tipe;Minimal 1 (satu) trayek/rute angkutan umum lanjutan ;4.a;1;0;;;;
+b;Sistem Informasi Menuju Moda Angkutan Feeder ;Tersediaan sistem pengarah (wayfinding) menuju angkutan feeder ;Semua Tipe;"i. Informasi rute angkutan feeder yang tersedia dalam radius 500 m (lima ratus meter); dan 
+ii. Informasi jarak/menit menuju titik jemput rute angkutan feeder. ";4.b;1;0;;;;
+c;Akses Menuju Angkutan Lanjutan ;Jarak menuju angkutan lanjutan tidak jauh ;Semua Tipe;Jarak maksimum 500 m (lima ratus meter) ;4.c;1;0;;;;
+d;Akses Transit Antarhalte/Antarjenis Transportasi Umum ;Jarak antarhalte/antartransportasi umum untuk melakukan transit tidak jauh ;Ujung;-;4.d;1;0;;;;
+;;;Transit;Jarak maksimum transit antarhalte sejauh 500 m (lima ratus meter) ;;;;;;;
+;;;Integrasi;Jarak maksimum transit antartransportasi umum sejauh 500 m (lima ratus meter) ;;;;;;;
+;;;Antara;-;;;;;;;
+e;Sistem Informasi Transit Antarhalte/Antarjenis Transportasi Umum  ;"Tersediannya informasi menuju halte transit/transportasi
+umum lainnya";Ujung;-;4.e;1;0;;;;
+;;;Transit;"i. Informasi rute yang tersedia pada halte transit tujuan; dan 
+ii. Informasi jarak/menit menuju halte transit. ";;;;;;;
+;;;Integrasi;"i. Informasi trayek yang tersedia pada moda transportasi umum integrasi; 
+ii. Penunjuk arah menuju akses masuk transportasi umum integrasi; dan 
+iii. Informasi jarak/menit menuju akses masuk transportasi umum. ";;;;;;;
+;;;Antara;-;;;;;;;
+Kesetaraan ;;;;;;;;;;;
+a;SOP Inklusivitas ;"a) Ketersediaan dokumen SOP di dalam halte; dan 
+b) Penerapan SOP oleh petugas layanan halte. ";Semua Tipe;"i. Minimal 1 (satu) dokumen SOP; dan 
+ii. Parameter perhitungan kelalaian penerapan SOP diatur dalam Perjanjian. ";5.a;1;0;;;;
+b;Dimensi Gate Umum ;Dimensi gate minimum (umum) ;Semua Tipe;Dimensi minimum gate 50 cm (lima puluh sentimeter) ;5.b;1;0;;;;
+c;Dimensi Gate Khusus ;Dimensi gate minimum (khusus) ;Semua Tipe;Dimensi minimum gate 92 cm (sembilan puluh dua sentimeter) dan dapat dilalui kursi roda;5.c;1;0;;;;
+d;Jalur Pemandu ;Keberadaan jalur pemandu di dalam halte ;Semua Tipe;"i. Adanya jalur pemandu yang tersedia di dalam halte yang mengarahkan ke pintu masuk bus mulai dari ramp menuju halte sampai ruang tunggu bus; dan 
+ii. Pola jalur pemandu mengikuti  ketentuan peraturan perundangundangan yang berlaku.";5.d;1;0;;;;
+e;Informasi Audio Kedatangan Bus ;Sistem informasi audio di halte ;Semua Tipe;Tersedianya sistem informasi audio yang menandakan kehadiran bus ;5.e;1;0;;;;
+f;Kelandaian Dermaga Halte;Dermaga halte dapat diakses secara inklusif terkhususnya pengguna kursi roda ;Semua Tipe;Dermaga halte dapat diakses pengguna kursi roda ;5.f;1;0;;;;
+g;Ramp Portable ;Ramp portable dioperasikan oleh petugas layanan halte ketika membantu pengguna prioritas yang membutuhkan ;Ujung;Ramp portable tersedia dan berfungsi dengan baik dengan lebar minimum 92 cm (sembilan puluh dua sentimeter) ;5.g;1;0;;;;
+;;;Transit;Ramp portable tersedia dan berfungsi dengan baik ;;;;;;;
+;;;Integrasi;Ramp portable tersedia dan berfungsi dengan baik dengan lebar minimum 92 cm (sembilan puluh dua sentimeter) ;;;;;;;
+;;;Antara;Ramp portable tersedia dan berfungsi dengan baik dengan lebar minimum 92 cm (sembilan puluh dua sentimeter) ;;;;;;;
+h;Ragam Jenis Top Up Kartu di Halte ;Ketersediaan mekanisme top up kartu yang mengakomodir top up dengan uang tunai ataupun elektronik ;Semua Tipe;Sistem top up kartu yang dapat dilakukan dengan uang tunai dan uang elektronik;5.h;1;0;;;;
+Keteraturan;;;;;;;;;;;
+a;Informasi Pelayanan ;"Informasi yang jelas di dalam halte minimal memuat: 
+1) nama halte;
+2) peta lokasi halte di koridor dimana halte yang bersangkutan berlokasi; 
+3) peta jaringan seluruh koridor Transjakarta; dan 
+4) penunjuk jalur antrean.";Semua Tipe;Setiap jenis informasi harus tersedia dan berada dalam kondisi yang baik ;6.a;1;0;;;;
+b;Informasi Waktu Kedatangan dan Gangguan Perjalanan;"a) Tersedianya sarana Informasi elektronik waktu kedatangan bus yang akurat; dan 
+b) Tersedianya informasi mengenai gangguan perjalanan atau pembaharuan informasi mengenai rute yang melayani. ";Ujung;Minimal 2 (dua) TV display yang menampilkan informasi kedatangan bus yang akurat dan informasi berita mengenai rute baru yang dioperasionalkan atau dihentikan dan tersedia di aplikasi mobile atau aplikasi web;6.b;1;0;;;;
+;;;Transit;Minimal 2 (dua) TV display yang menampilkan informasi kedatangan bus yang akurat dan informasi berita mengenai rute baru yang dioperasionalkan atau dihentikan dan tersedia di aplikasi mobile atau aplikasi web;;;;;;;
+;;;Integrasi;Minimal 2 (dua) TV display yang menampilkan informasi kedatangan bus yang akurat dan informasi berita mengenai rute baru yang dioperasionalkan atau dihentikan dan tersedia di aplikasi mobile atau aplikasi web;;;;;;;
+;;;Antara;Minimal 1 (satu) TV display yang menampilkan informasi kedatangan bus yang akurat dan informasi berita mengenai rute baru yang dioperasionalkan atau dihentikan dan tersedia di aplikasi mobile atau aplikasi web;;;;;;;
+c;Jumlah Minimum Gate Pembayaran ;Jumlah minimum gate pembayaran ;Ujung;Minimum 2 (dua) gate Bidi (Bidirectional) ;6.c;1;0;;;;
+;;;Transit;Minimum 2 (dua) gate Bidi (Bidirectional) ;;;;;;;
+;;;Integrasi;Minimum 2 (dua) gate Bidi (Bidirectional) ;;;;;;;
+;;;Antara;Minimum 1 (satu) gate Bidi (Bidirectional) ;;;;;;;
+d;Sistem Pembayaran ;Tersedianya sistem e-ticketing di semua halte BRT ;Semua Tipe;"i. Semua sistem pembayaran pada gate berfungsi dengan baik; dan 
+ii. Dapat digunakan dengan menggunakan kartu dari berbagai operator bank nasional.";6.d;1;0;;;;
+e;Ketertiban Lingkungan Kawasan Halte ;Kendaraan yang parkir di kawasan halte tidak menggangu fasilitas umum (median jalan, taman, trotoar, dan badan jalan) ;Semua Tipe;Tidak ada kendaraan yang parkir sembarangan di kawasan halte yang menggangu fasilitas umum ;6.e;1;0;;;;
+f;Lokasi Pengaturan Waktu Keberangkatan;"Lokasi pengaturan waktu keberangkatan berfungsi sebagai
+tempat kendaraan menunggu jadwal keberangkatan yang tidak mengganggu arus lalu lintas ";Ujung;Maksimal 1 (satu) kendaraan yang menunggu/rute ;6.f;1;0;;;;
+;;;Transit;-;;;;;;;
+;;;Integrasi;-;;;;;;;
+;;;Antara;-;;;;;;;
+;;;;;;;;;;;
+;;;;;;;;;;;
+;;;;;;;;;;;
+;;;;;MENGETAHUI,;;;;;;
+;;;;;;;;;;;
+;;;;;;;;;;;
+;;;;;;;;;;;
+;;;;;;;;;;;
+;;;;;;;;;;;
+;;;;;;;;;;;
+;;;;;;;;;;;
+;;;;                DINAS PERHUBUNGAN PROVINSI DKI JAKARTA;TRANS JAKARTA;;;PT. SURVEYOR INDONESIA;;;

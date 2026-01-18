@@ -235,12 +235,25 @@ const ArmadaTable = ({ initialData }) => {
     <Card
       title="DATA SURVEY ARMADA"
       headerslot={
-        <div className="flex">
+        <div className="flex items-center space-x-2">
           <TableSearchGlobal
             filter={globalFilter}
             setFilter={setGlobalFilter}
           />
           <ButtonExport fileName="Survey-Armada" data={safeData} />
+          <a
+            href="/api/armada/export"
+            className="btn btn-outline-primary btn-sm flex items-center"
+            download
+          >
+            <Icon
+              icon="solar:file-text-bold"
+              width="16"
+              height="16"
+              className="mr-1"
+            />
+            <span>Tabulasi</span>
+          </a>
         </div>
       }
     >

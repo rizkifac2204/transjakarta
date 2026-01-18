@@ -14,6 +14,7 @@ import { main as seedLevels } from "./_levels.js";
 import { main as seedUsers } from "./_user.js";
 import { main as seedSeviceType } from "./_service_type.js";
 import { main as seedFleetType } from "./_fleet_type.js";
+import { main as seedShelterType } from "./_shelter_type.js";
 
 const prisma = new PrismaClient({ adapter });
 
@@ -22,6 +23,7 @@ const seeders = {
   users: seedUsers,
   services: seedSeviceType,
   fleets: seedFleetType,
+  shelters: seedShelterType,
 };
 
 async function main() {
@@ -33,6 +35,7 @@ async function main() {
     await seedUsers(prisma);
     await seedSeviceType(prisma);
     await seedFleetType(prisma);
+    await seedShelterType(prisma);
   } else {
     for (const arg of args) {
       if (seeders[arg]) {
