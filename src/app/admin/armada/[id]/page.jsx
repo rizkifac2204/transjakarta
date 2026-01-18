@@ -3,6 +3,7 @@ import { decodeOrNotFound } from "@/libs/hash/safeDecode";
 import { getArmadaById } from "@/libs/armada";
 import { notFound } from "next/navigation";
 
+import ArmadaProvider from "@/providers/armada-provider";
 import ArmadaDetails from "./_Detail";
 
 export const dynamic = "force-dynamic";
@@ -29,7 +30,9 @@ async function ArmadaDetail({ params }) {
 
   return (
     <div className="space-y-5">
-      <ArmadaDetails initialData={modifiedArmada} />
+      <ArmadaProvider initialValue={modifiedArmada}>
+        <ArmadaDetails />
+      </ArmadaProvider>
     </div>
   );
 }

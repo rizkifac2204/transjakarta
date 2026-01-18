@@ -3,6 +3,7 @@ import getLogs from "@/libs/getLogs";
 import prisma from "@/libs/prisma";
 import { PATH_UPLOAD } from "@/configs/appConfig";
 import { hapusFile } from "@/services/uploadservices";
+import { resetFinishArmada } from "../route";
 
 export async function DELETE(_request, { params }) {
   try {
@@ -61,6 +62,8 @@ export async function DELETE(_request, { params }) {
 
     if (answerRecord?.photo_url)
       await hapusFile(answerRecord?.photo_url, PATH_UPLOAD.armada);
+
+    resetFinishArmada(parsedSurveyId);
 
     return Response.json({
       message: "Jawaban survei berhasil dihapus",

@@ -1,9 +1,18 @@
 "use client";
 
+import { useArmadaContext } from "@/providers/armada-provider";
+import { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 import Card from "@/components/ui/Card";
 import QuestionRow from "./_QuestionRow";
+import Button from "@/components/ui/Button";
+import Alert from "@/components/ui/Alert";
 
-const ArmadaForm = ({ initialData, questions }) => {
+const ArmadaForm = ({ questions }) => {
+  const [finishing, setFinishing] = useState(null);
+  const { armada, setArmada } = useArmadaContext();
+
   if (!questions || questions.length === 0) {
     return (
       <Card title="Formulir Survey">
@@ -21,6 +30,24 @@ const ArmadaForm = ({ initialData, questions }) => {
     return acc;
   }, {});
 
+  const handleFinish = async (id) => {
+    const confirmed = confirm(
+      "Apakah Anda yakin ingin menyelesaikan survey ini?",
+    );
+    if (!confirmed) return;
+
+    setFinishing(true);
+    try {
+      const res = await axios.patch(`/api/armada/${id}/survey`);
+      toast.success(res.data.message || "Berhasil Menyelesaikan Survey");
+      setArmada((prev) => ({ ...prev, finish: true }));
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Terjadi Kesalahan");
+    } finally {
+      setFinishing(false);
+    }
+  };
+
   return (
     <Card>
       <div className="space-y-5">
@@ -29,21 +56,38 @@ const ArmadaForm = ({ initialData, questions }) => {
             <h4 className="mb-4">{section}</h4>
             <ul className="space-y-4">
               {qs.map((question) => {
-                const initialAnswer = initialData.answers.find(
-                  (a) => a.question_id === question.id
+                const initialAnswer = armada.answers.find(
+                  (a) => a.question_id === question.id,
                 );
                 return (
                   <QuestionRow
                     key={question.id}
                     question={question}
-                    armada_survey_id={initialData.id}
+                    armada_survey_id={armada.id}
                     initialAnswer={initialAnswer}
+                    resetFinish={() =>
+                      setArmada((prev) => ({ ...prev, finish: false }))
+                    }
                   />
                 );
               })}
             </ul>
           </div>
         ))}
+
+        {armada.finish ? (
+          <Alert className="alert-outline-success mb-4">
+            Survey Sudah Diselesaikan
+          </Alert>
+        ) : (
+          <Button
+            className="btn-primary w-full btn-sm"
+            onClick={() => handleFinish(armada.id)}
+            disabled={finishing}
+          >
+            {finishing ? "Menyelesaikan..." : "Selesaikan Survey"}
+          </Button>
+        )}
       </div>
     </Card>
   );

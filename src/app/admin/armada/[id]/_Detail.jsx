@@ -7,20 +7,23 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { encodeId } from "@/libs/hash/hashId";
 import { formatedDate, formatOutputTime } from "@/utils/formatDate";
+import { useArmadaContext } from "@/providers/armada-provider";
 import Link from "next/link";
 import Tooltip from "@/components/ui/Tooltip";
 import Icon from "@/components/ui/Icon";
 import Card from "@/components/ui/Card";
+import Badge from "@/components/ui/Badge";
 
-const ArmadaDetails = ({ initialData }) => {
+const ArmadaDetails = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [isDeleting, setIsDeleting] = useState(false);
+  const { armada } = useArmadaContext();
 
   const ListActions = ({ isManage }) => {
     let linkback;
     if (pathname.includes("/survey")) {
-      linkback = `/admin/armada/${encodeId(initialData.id)}`;
+      linkback = `/admin/armada/${encodeId(armada.id)}`;
     } else {
       linkback = `/admin/armada`;
     }
@@ -39,7 +42,7 @@ const ArmadaDetails = ({ initialData }) => {
             >
               <Link
                 className="action-btn"
-                href={`/admin/armada/${encodeId(initialData.id)}/edit`}
+                href={`/admin/armada/${encodeId(armada.id)}/edit`}
               >
                 <Icon icon="solar:pen-2-broken" />
               </Link>
@@ -52,7 +55,7 @@ const ArmadaDetails = ({ initialData }) => {
             >
               <Link
                 className="action-btn"
-                href={`/admin/armada/${encodeId(initialData.id)}/survey`}
+                href={`/admin/armada/${encodeId(armada.id)}/survey`}
               >
                 <Icon icon="solar:file-broken" />
               </Link>
@@ -90,7 +93,7 @@ const ArmadaDetails = ({ initialData }) => {
 
     setIsDeleting(true);
     try {
-      await axios.delete(`/api/armada/${initialData.id}`);
+      await axios.delete(`/api/armada/${armada.id}`);
       toast.success("Berhasil Hapus");
       router.push("/admin/armada");
     } catch (error) {
@@ -102,55 +105,66 @@ const ArmadaDetails = ({ initialData }) => {
 
   return (
     <Card
-      title={`JENIS SPM: ARMADA`}
+      title={
+        <div className="flex items-center space-x-2">
+          <span>JENIS SPM: ARMADA</span>
+          <div>
+            <Badge
+              icon={"solar:checklist-minimalistic-broken"}
+              className={armada?.finish ? "bg-success-600" : "bg-warning-600"}
+              label={armada?.finish ? "Selesai" : "Belum Selesai"}
+            />
+          </div>
+        </div>
+      }
       headerslot={
         <div
           className={`flex space-x-1 ${
             isDeleting ? "pointer-events-none opacity-50" : ""
           }`}
         >
-          <ListActions isManage={initialData.isManage} />
+          <ListActions isManage={armada.isManage} />
         </div>
       }
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         <div className="flex-1">
           <div className="text-xs">SURVEYOR :</div>
-          <b>{initialData?.surveyor?.nama}</b>
+          <b>{armada?.surveyor?.nama}</b>
         </div>
         <div className="flex-1">
           <div className="text-xs">JENIS LAYANAN :</div>
-          <b>{initialData?.service_type?.name}</b>
+          <b>{armada?.service_type?.name}</b>
         </div>
         <div className="flex-1">
           <div className="text-xs">TIPE ARMADA :</div>
-          <b>{initialData?.fleet_type?.name}</b>
+          <b>{armada?.fleet_type?.name}</b>
         </div>
         <div className="flex-1">
           <div className="text-xs">NO. BODY :</div>
-          <b>{initialData?.no_body}</b>
+          <b>{armada?.no_body}</b>
         </div>
         <div className="flex-1">
           <div className="text-xs">KODE TRAYEK :</div>
-          <b>{initialData?.kode_trayek}</b>
+          <b>{armada?.kode_trayek}</b>
         </div>
         <div className="flex-1">
           <div className="text-xs">ASAL - TUJUAN :</div>
-          <b>{initialData?.asal_tujuan}</b>
+          <b>{armada?.asal_tujuan}</b>
         </div>
         <div className="flex-1">
           <div className="text-xs">PERIODE :</div>
-          <b>{initialData?.periode}</b>
+          <b>{armada?.periode}</b>
         </div>
         <div className="flex-1">
           <div className="text-xs">HARI/TANGGAL :</div>
-          <b>{formatedDate(initialData?.tanggal, true)}</b>
+          <b>{formatedDate(armada?.tanggal, true)}</b>
         </div>
         <div className="flex-1">
           <div className="text-xs">JAM MULAI - SELESAI :</div>
           <b>
-            {formatOutputTime(initialData?.jam_mulai)} -{" "}
-            {formatOutputTime(initialData?.jam_selesai)}
+            {formatOutputTime(armada?.jam_mulai)} -{" "}
+            {formatOutputTime(armada?.jam_selesai)}
           </b>
         </div>
       </div>

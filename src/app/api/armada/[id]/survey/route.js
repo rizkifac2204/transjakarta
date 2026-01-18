@@ -4,6 +4,16 @@ import getLogs from "@/libs/getLogs";
 import { parseJsonBody } from "@/utils/parseJsonBody";
 import { PATH_UPLOAD } from "@/configs/appConfig";
 import { hapusFile } from "@/services/uploadservices";
+import { getQuestionsBySurvey } from "@/libs/armada-question";
+
+export async function resetFinishArmada(id) {
+  await prisma.armada_survey.update({
+    where: { id: id },
+    data: {
+      finish: false,
+    },
+  });
+}
 
 export async function POST(request, { params }) {
   try {
@@ -80,9 +90,93 @@ export async function POST(request, { params }) {
       await hapusFile(answerRecord?.photo_url, PATH_UPLOAD.armada);
     }
 
+    resetFinishArmada(parsedId);
+
     return Response.json({
       message: "Berhasil menyimpan jawaban survei",
       payload: surveyAnswer,
+    });
+  } catch (error) {
+    getLogs("armada").error(error);
+    return Response.json(
+      {
+        message: "Terjadi Kesalahan",
+        error: error instanceof Error ? error.message : error,
+      },
+      { status: error.status || 500 },
+    );
+  }
+}
+
+export async function PATCH(request, { params }) {
+  try {
+    const auth = await verifyAuth();
+    // belum ada blokir authorisasi
+
+    const { id } = params;
+    const parsedId = parseInt(id);
+    if (!id || isNaN(parsedId)) {
+      return Response.json({ message: "ID tidak valid" }, { status: 400 });
+    }
+
+    // authorize surveyor atau admin
+    const armada = await prisma.armada_survey.findUnique({
+      where: { id: parsedId },
+      include: {
+        answers: true,
+        service_type: true,
+        fleet_type: true,
+      },
+    });
+
+    if (!armada) {
+      return Response.json({ message: "Not Found" }, { status: 404 });
+    }
+    if (auth.role > 3 && auth.id !== armada.surveyor_id) {
+      return Response.json({ message: "Forbidden" }, { status: 403 });
+    }
+
+    // Use the shared function to get questions, ensuring consistency with the UI
+    const uniqueQuestions = await getQuestionsBySurvey(
+      armada.service_type_id,
+      armada.fleet_type_id,
+    );
+
+    const totalQuestions = uniqueQuestions.length;
+    const totalAnswers = armada.answers.length;
+
+    if (totalAnswers < totalQuestions) {
+      return Response.json(
+        { message: "Harap jawab semua pertanyaan sebelum menyelesaikan." },
+        { status: 400 },
+      );
+    }
+
+    for (const answer of armada.answers) {
+      if (!answer.answer && !answer.note && !answer.photo_url) {
+        const question = uniqueQuestions.find(
+          (q) => q.id === answer.question_id,
+        );
+        return Response.json(
+          {
+            message: `Pertanyaan "${question.basic}" harus memiliki catatan atau foto jika jawaban "Tidak".`,
+          },
+          { status: 400 },
+        );
+      }
+    }
+
+    const finishedSurvey = await prisma.armada_survey.update({
+      where: { id: parsedId },
+      data: {
+        finish: true,
+        // jam_selesai: new Date(),
+      },
+    });
+
+    return Response.json({
+      message: "Berhasil menyelesaikan survey",
+      payload: finishedSurvey,
     });
   } catch (error) {
     getLogs("armada").error(error);

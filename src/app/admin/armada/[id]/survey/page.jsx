@@ -4,6 +4,7 @@ import { getArmadaById } from "@/libs/armada";
 import { notFound } from "next/navigation";
 import { getQuestionsBySurvey } from "@/libs/armada-question";
 
+import ArmadaProvider from "@/providers/armada-provider";
 import ArmadaDetails from "../_Detail";
 import ArmadaForm from "./_Form";
 
@@ -36,8 +37,10 @@ async function ArmadaDetail({ params }) {
 
   return (
     <div className="space-y-5">
-      <ArmadaDetails initialData={modifiedArmada} />
-      <ArmadaForm initialData={modifiedArmada} questions={questions} />
+      <ArmadaProvider initialValue={modifiedArmada}>
+        <ArmadaDetails />
+        <ArmadaForm questions={questions} />
+      </ArmadaProvider>
     </div>
   );
 }

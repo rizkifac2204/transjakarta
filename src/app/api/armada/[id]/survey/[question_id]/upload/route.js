@@ -8,6 +8,7 @@ import uploadServices, {
   hapusFileYangSudahTerupload,
   hapusFile,
 } from "@/services/uploadservices";
+import { resetFinishArmada } from "../../route";
 
 export async function POST(request, { params }) {
   let uploadedFiles = [];
@@ -92,6 +93,8 @@ export async function POST(request, { params }) {
     if (answerRecord?.photo_url)
       await hapusFile(answerRecord?.photo_url, PATH_UPLOAD.armada);
 
+    resetFinishArmada(parsedSurveyId);
+
     return Response.json({
       message: "Berhasil mengunggah foto",
       payload: updatedAnswer,
@@ -155,6 +158,8 @@ export async function DELETE(_request, { params }) {
 
     if (answerRecord?.photo_url)
       await hapusFile(answerRecord?.photo_url, PATH_UPLOAD.armada);
+
+    resetFinishArmada(parsedSurveyId);
 
     return Response.json({
       message: "Berhasil menghapus foto",

@@ -14,7 +14,12 @@ const ANSWER_OPTIONS = [
   { value: false, label: "Tidak" },
 ];
 
-const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
+const QuestionRow = ({
+  question,
+  armada_survey_id,
+  initialAnswer,
+  resetFinish,
+}) => {
   const [answer, setAnswer] = useState(initialAnswer?.answer ?? null);
   const [note, setNote] = useState(initialAnswer?.note ?? "");
   const [progress, setProgress] = useState(0);
@@ -47,6 +52,7 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
 
         const newPhotoUrl = response.data?.payload?.photo_url;
         setPhotoUrl(newPhotoUrl);
+        resetFinish();
       } catch (err) {
         setError(err.response?.data?.message || err.message);
       } finally {
@@ -84,6 +90,7 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
           note: savedPayload.note,
           photo_url: savedPayload.photo_url,
         });
+        resetFinish();
       } catch (err) {
         setError(err.response?.data?.message || err.message);
         setAnswer(lastSaved?.answer ?? null);
@@ -112,6 +119,7 @@ const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
       setAnswer(null);
       setPhotoUrl(null);
       setNote("");
+      resetFinish();
     } catch (err) {
       setError(err.response?.data?.message || err.message);
     } finally {
