@@ -65,9 +65,6 @@ const ArmadaForm = ({ questions }) => {
                     question={question}
                     armada_survey_id={armada.id}
                     initialAnswer={initialAnswer}
-                    resetFinish={() =>
-                      setArmada((prev) => ({ ...prev, finish: false }))
-                    }
                   />
                 );
               })}

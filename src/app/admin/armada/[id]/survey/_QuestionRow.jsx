@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useArmadaContext } from "@/providers/armada-provider";
 import axios from "axios";
 import Select from "@/components/ui/Select";
 import TextArea from "@/components/ui/TextArea";
@@ -14,12 +15,8 @@ const ANSWER_OPTIONS = [
   { value: false, label: "Tidak" },
 ];
 
-const QuestionRow = ({
-  question,
-  armada_survey_id,
-  initialAnswer,
-  resetFinish,
-}) => {
+const QuestionRow = ({ question, armada_survey_id, initialAnswer }) => {
+  const { setArmada } = useArmadaContext();
   const [answer, setAnswer] = useState(initialAnswer?.answer ?? null);
   const [note, setNote] = useState(initialAnswer?.note ?? "");
   const [progress, setProgress] = useState(0);
@@ -52,7 +49,7 @@ const QuestionRow = ({
 
         const newPhotoUrl = response.data?.payload?.photo_url;
         setPhotoUrl(newPhotoUrl);
-        resetFinish();
+        setArmada((prev) => ({ ...prev, finish: false }));
       } catch (err) {
         setError(err.response?.data?.message || err.message);
       } finally {
@@ -90,7 +87,7 @@ const QuestionRow = ({
           note: savedPayload.note,
           photo_url: savedPayload.photo_url,
         });
-        resetFinish();
+        setArmada((prev) => ({ ...prev, finish: false }));
       } catch (err) {
         setError(err.response?.data?.message || err.message);
         setAnswer(lastSaved?.answer ?? null);
@@ -100,7 +97,7 @@ const QuestionRow = ({
         setIsSaving(false);
       }
     },
-    [armada_survey_id, lastSaved],
+    [armada_survey_id, lastSaved, setArmada],
   );
 
   const deleteAnswer = useCallback(async () => {
@@ -119,13 +116,13 @@ const QuestionRow = ({
       setAnswer(null);
       setPhotoUrl(null);
       setNote("");
-      resetFinish();
+      setArmada((prev) => ({ ...prev, finish: false }));
     } catch (err) {
       setError(err.response?.data?.message || err.message);
     } finally {
       setIsSaving(false);
     }
-  }, [armada_survey_id, question.id]);
+  }, [armada_survey_id, question.id, setArmada]);
 
   useEffect(() => {
     if (answer === true) return;
