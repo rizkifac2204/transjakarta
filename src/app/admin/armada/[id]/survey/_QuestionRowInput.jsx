@@ -15,7 +15,7 @@ const ANSWER_OPTIONS = [
   { value: false, label: "Tidak" },
 ];
 
-const QuestionRowInput = ({ question, armada_survey_id, initialAnswer }) => {
+const QuestionRowInput = ({ question, initialAnswer }) => {
   const { armada, setArmada } = useArmadaContext();
   const [answer, setAnswer] = useState(initialAnswer?.answer ?? null);
   const [note, setNote] = useState(initialAnswer?.note ?? "");
@@ -37,7 +37,7 @@ const QuestionRowInput = ({ question, armada_survey_id, initialAnswer }) => {
 
       try {
         const response = await axios.post(
-          `/api/armada/${armada_survey_id}/survey/${question.id}/upload`,
+          `/api/armada/${armada.id}/survey/${question.id}/upload`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -61,7 +61,7 @@ const QuestionRowInput = ({ question, armada_survey_id, initialAnswer }) => {
 
       try {
         await axios.delete(
-          `/api/armada/${armada_survey_id}/survey/${question.id}/upload`,
+          `/api/armada/${armada.id}/survey/${question.id}/upload`,
         );
         setPhotoUrl(null);
       } catch (err) {
@@ -78,7 +78,7 @@ const QuestionRowInput = ({ question, armada_survey_id, initialAnswer }) => {
       setError(null);
       try {
         const res = await axios.post(
-          `/api/armada/${armada_survey_id}/survey`,
+          `/api/armada/${armada.id}/survey`,
           payload,
         );
         const { payload: savedPayload } = res.data;
@@ -97,16 +97,14 @@ const QuestionRowInput = ({ question, armada_survey_id, initialAnswer }) => {
         setIsSaving(false);
       }
     },
-    [armada_survey_id, lastSaved, setArmada],
+    [armada.id, lastSaved, setArmada],
   );
 
   const deleteAnswer = useCallback(async () => {
     setIsSaving(true);
     setError(null);
     try {
-      await axios.delete(
-        `/api/armada/${armada_survey_id}/survey/${question.id}`,
-      );
+      await axios.delete(`/api/armada/${armada.id}/survey/${question.id}`);
       setLastSaved({ answer: null, note: "", photo_url: null });
       setAnswer(null);
       setPhotoUrl(null);
@@ -120,7 +118,7 @@ const QuestionRowInput = ({ question, armada_survey_id, initialAnswer }) => {
     } finally {
       setIsSaving(false);
     }
-  }, [armada_survey_id, question.id, setArmada, lastSaved]);
+  }, [armada.id, question.id, setArmada, lastSaved]);
 
   useEffect(() => {
     if (answer === true) return;

@@ -1,9 +1,11 @@
 "use client";
 
+import { useArmadaContext } from "@/providers/armada-provider";
 import { PATH_UPLOAD } from "@/configs/appConfig";
 import FilePreview from "@/components/ui/FilePreview";
 
 const QuestionRow = ({ question, initialAnswer }) => {
+  const { armada } = useArmadaContext();
   return (
     <li className="p-4 border rounded-md shadow-sm">
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
@@ -32,7 +34,7 @@ const QuestionRow = ({ question, initialAnswer }) => {
             <FilePreview
               fileUrl={
                 initialAnswer?.photo_url
-                  ? `/api/services/file/uploads/${PATH_UPLOAD.armada}/${initialAnswer?.id}`
+                  ? `/api/services/file/uploads/${PATH_UPLOAD.armada}/${armada?.id}/${initialAnswer?.photo_url}`
                   : null
               }
               filename={initialAnswer?.photo_url || "Image"}

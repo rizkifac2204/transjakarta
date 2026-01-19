@@ -39,7 +39,6 @@ const SectionQuestions = ({ questions }) => {
                   <QuestionRow
                     key={question.id}
                     question={question}
-                    armada_survey_id={armada.id}
                     initialAnswer={initialAnswer}
                   />
                 );

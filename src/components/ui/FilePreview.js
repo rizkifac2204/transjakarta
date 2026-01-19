@@ -42,7 +42,11 @@ export default function FilePreview({
           width={width ? width : 250}
           height={height ? height : 250}
           className={className ? className : "rounded-md object-cover"}
-          onError={() => setImgSrc("/assets/images/user.png")}
+          onError={() => {
+            if (imgSrc !== "/assets/images/user.png") {
+              setImgSrc("/assets/images/user.png");
+            }
+          }}
           priority
         />
       );
@@ -58,7 +62,11 @@ export default function FilePreview({
           width={250}
           height={250}
           className={className ? className : "rounded-md object-cover"}
-          onError={() => setImgSrc("/assets/images/user.png")}
+          onError={() => {
+            if (imgSrc !== "/assets/images/user.png") {
+              setImgSrc("/assets/images/user.png");
+            }
+          }}
           priority
         />
       </Link>
@@ -71,13 +79,17 @@ export default function FilePreview({
         {label ? label : null}
         <Link href={fileUrl || "#"} target="_blank" rel="noopener noreferrer">
           <Image
-            src={fileUrl}
+            src={imgSrc}
             alt={filename}
             width={width ? width : 250}
             height={height ? height : 250}
             className={className ? className : "rounded-md object-cover"}
             style={{ width: "auto" }}
-            onError={(e) => (e.target.src = "/assets/images/user.png")}
+            onError={() => {
+              if (imgSrc !== "/assets/images/user.png") {
+                setImgSrc("/assets/images/user.png");
+              }
+            }}
             priority
           />
         </Link>
