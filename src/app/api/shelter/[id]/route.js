@@ -6,6 +6,9 @@ import {
   deleteShelterSurvey,
 } from "@/libs/shelter-survey";
 import getLogs from "@/libs/getLogs";
+import { pathShelter } from "./survey/[question_id]/upload/route";
+import fs from "fs/promises";
+import path from "path";
 
 export async function PATCH(request, { params }) {
   try {
@@ -97,9 +100,20 @@ export async function DELETE(request, { params }) {
       return Response.json({ message: "Forbidden" }, { status: 403 });
     }
 
+    const folderPath = path.join(
+      process.cwd(),
+      "src",
+      "uploads",
+      pathShelter(survey),
+    );
+
     const deleted = await deleteShelterSurvey(parsedId);
 
-    // delete path
+    // delete all folder
+    await fs.rm(folderPath, {
+      recursive: true,
+      force: true,
+    });
 
     return Response.json({
       message: "Berhasil menghapus data",

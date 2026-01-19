@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useArmadaContext } from "@/providers/armada-provider";
+import { useShelterContext } from "@/providers/shelter-provider";
 import axios from "axios";
 import Select from "@/components/ui/Select";
 import TextArea from "@/components/ui/TextArea";
@@ -16,7 +16,7 @@ const ANSWER_OPTIONS = [
 ];
 
 const QuestionRowInput = ({ question, initialAnswer }) => {
-  const { armada, setArmada } = useArmadaContext();
+  const { shelter, setShelter } = useShelterContext();
   const [answer, setAnswer] = useState(initialAnswer?.answer ?? null);
   const [note, setNote] = useState(initialAnswer?.note ?? "");
   const [progress, setProgress] = useState(0);
@@ -37,7 +37,7 @@ const QuestionRowInput = ({ question, initialAnswer }) => {
 
       try {
         const response = await axios.post(
-          `/api/armada/${armada.id}/survey/${question.id}/upload`,
+          `/api/shelter/${shelter.id}/survey/${question.id}/upload`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -49,7 +49,7 @@ const QuestionRowInput = ({ question, initialAnswer }) => {
 
         const newPhotoUrl = response.data?.payload?.photo_url;
         setPhotoUrl(newPhotoUrl);
-        setArmada((prev) => ({ ...prev, finish: false }));
+        setShelter((prev) => ({ ...prev, finish: false }));
       } catch (err) {
         setError(err.response?.data?.message || err.message);
       } finally {
@@ -61,7 +61,7 @@ const QuestionRowInput = ({ question, initialAnswer }) => {
 
       try {
         await axios.delete(
-          `/api/armada/${armada.id}/survey/${question.id}/upload`,
+          `/api/shelter/${shelter.id}/survey/${question.id}/upload`,
         );
         setPhotoUrl(null);
       } catch (err) {
@@ -78,7 +78,7 @@ const QuestionRowInput = ({ question, initialAnswer }) => {
       setError(null);
       try {
         const res = await axios.post(
-          `/api/armada/${armada.id}/survey`,
+          `/api/shelter/${shelter.id}/survey`,
           payload,
         );
         const { payload: savedPayload } = res.data;
@@ -87,7 +87,7 @@ const QuestionRowInput = ({ question, initialAnswer }) => {
           note: savedPayload.note,
           photo_url: savedPayload.photo_url,
         });
-        setArmada((prev) => ({ ...prev, finish: false }));
+        setShelter((prev) => ({ ...prev, finish: false }));
       } catch (err) {
         setError(err.response?.data?.message || err.message);
         setAnswer(lastSaved?.answer ?? null);
@@ -97,19 +97,19 @@ const QuestionRowInput = ({ question, initialAnswer }) => {
         setIsSaving(false);
       }
     },
-    [armada.id, lastSaved, setArmada],
+    [shelter.id, lastSaved, setShelter],
   );
 
   const deleteAnswer = useCallback(async () => {
     setIsSaving(true);
     setError(null);
     try {
-      await axios.delete(`/api/armada/${armada.id}/survey/${question.id}`);
+      await axios.delete(`/api/shelter/${shelter.id}/survey/${question.id}`);
       setLastSaved({ answer: null, note: "", photo_url: null });
       setAnswer(null);
       setPhotoUrl(null);
       setNote("");
-      setArmada((prev) => ({ ...prev, finish: false }));
+      setShelter((prev) => ({ ...prev, finish: false }));
     } catch (err) {
       setError(err.response?.data?.message || err.message);
       setAnswer(lastSaved?.answer ?? null);
@@ -118,7 +118,7 @@ const QuestionRowInput = ({ question, initialAnswer }) => {
     } finally {
       setIsSaving(false);
     }
-  }, [armada.id, question.id, setArmada, lastSaved]);
+  }, [shelter.id, question.id, setShelter, lastSaved]);
 
   useEffect(() => {
     if (answer === true) return;
@@ -209,7 +209,7 @@ const QuestionRowInput = ({ question, initialAnswer }) => {
               onChange={handlePhotoUpload}
               initialImageUrl={
                 photoUrl
-                  ? `/api/services/file/uploads/${PATH_UPLOAD.armada}/${armada.id}/${photoUrl}`
+                  ? `/api/services/file/uploads/${PATH_UPLOAD.shelter}/${shelter.id}/${photoUrl}`
                   : null
               }
               disabled={isUploading}
