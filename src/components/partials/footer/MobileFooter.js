@@ -63,12 +63,12 @@ const MobileFooter = () => {
           />
         </div>
       </Link>
-      <Link href="/admin/halte">
+      <Link href="/admin/shelter">
         <div>
           <span
             className={` relative cursor-pointer rounded-full text-[20px] flex flex-col items-center justify-center mb-1
       ${
-        pathname === "/admin/halte"
+        pathname === "/admin/shelter"
           ? "text-primary-500"
           : "dark:text-white text-slate-900"
       }

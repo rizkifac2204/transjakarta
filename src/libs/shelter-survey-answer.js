@@ -28,7 +28,11 @@ export async function createShelterSurveyAnswer(data) {
   return prisma.shelter_survey_answer.create({ data });
 }
 
-export async function upsertShelterSurveyAnswer(shelter_survey_id, question_id, data) {
+export async function upsertShelterSurveyAnswer(
+  shelter_survey_id,
+  question_id,
+  data,
+) {
   return prisma.shelter_survey_answer.upsert({
     where: {
       shelter_survey_id_question_id: {
@@ -44,7 +48,6 @@ export async function upsertShelterSurveyAnswer(shelter_survey_id, question_id, 
     },
   });
 }
-
 
 export async function updateShelterSurveyAnswer(id, data) {
   const parsedId = Number(id);

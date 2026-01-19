@@ -18,7 +18,7 @@ const tables2 = [
     title: "Survey Halte",
     price_Monthly: "$16",
     button: "Lakukan Survey",
-    link: "/admin/halte/add",
+    link: "/admin/shelter/add",
     text: "Formulir untuk mengisi data survey SPM Halte Transjakarta",
   },
   {

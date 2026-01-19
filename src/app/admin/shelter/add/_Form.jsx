@@ -12,7 +12,7 @@ import TextInput from "@/components/ui/TextInput";
 import TimeInputController from "@/components/ui/TimeInputController";
 import Dateinputcontroller from "@/components/ui/DateInputController";
 
-const ArmadaFormEdit = ({ initialData, serviceTypes, fleetTypes }) => {
+const ShelterFormAdd = ({ shelterTypes }) => {
   const router = useRouter();
 
   const {
@@ -22,26 +22,25 @@ const ArmadaFormEdit = ({ initialData, serviceTypes, fleetTypes }) => {
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
-      service_type_id: initialData?.service_type_id || "",
-      fleet_type_id: initialData?.fleet_type_id || "",
-      tanggal: initialData?.tanggal || null,
-      periode: initialData?.periode || "",
-      jam_mulai: initialData?.jam_mulai || null,
-      jam_selesai: initialData?.jam_selesai || null,
-      no_body: initialData?.no_body || "",
-      kode_trayek: initialData?.kode_trayek || "",
-      asal_tujuan: initialData?.asal_tujuan || "",
+      nama_halte: "",
+      kode_halte: "",
+      shelter_type_id: "",
+      tanggal: null,
+      periode: "",
+      jam_mulai: null,
+      jam_selesai: null,
     },
   });
 
   const onSubmit = async (formData) => {
     try {
-      await axios.patch(`/api/armada/${initialData.id}`, formData);
-      toast.success("Berhasil Mengedit Data");
-      router.refresh();
+      const res = await axios.post("/api/shelter", formData);
+      toast.success("Berhasil Membuat Data");
+      setTimeout(() => {
+        window.open(`/admin/shelter/${encodeId(res.data.id)}/survey`, "_self");
+      }, 1000);
     } catch (error) {
-      console.log(error);
-      toast.error(error.response?.data?.message || "Gagal Mengedit Data");
+      toast.error(error.response?.data?.message || "Gagal Membuat Data");
     }
   };
 
@@ -49,63 +48,36 @@ const ArmadaFormEdit = ({ initialData, serviceTypes, fleetTypes }) => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div>
+          <TextInput
+            label="Nama Halte *"
+            type="text"
+            {...register("nama_halte", { required: true })}
+            error={errors.nama_halte}
+          />
+
+          <TextInput
+            label="Kode Halte *"
+            type="text"
+            {...register("kode_halte", { required: true })}
+            error={errors.kode_halte}
+          />
+
           <Select
-            label="Jenis Layanan *"
-            name="service_type_id"
-            disabled
+            label="Tipe Halte *"
+            name="shelter_type_id"
             options={
-              Array.isArray(serviceTypes)
-                ? serviceTypes.map((item) => ({
+              Array.isArray(shelterTypes)
+                ? shelterTypes.map((item) => ({
                     value: item.id,
                     label: item.name,
                   }))
                 : []
             }
-            {...register("service_type_id", { required: "Wajib Dipilih" })}
-            error={errors.service_type_id}
-          />
-
-          <Select
-            label="Tipe Armada *"
-            name="fleet_type_id"
-            disabled
-            options={
-              Array.isArray(fleetTypes)
-                ? fleetTypes.map((item) => ({
-                    value: item.id,
-                    label: item.name,
-                  }))
-                : []
-            }
-            {...register("fleet_type_id", { required: "Wajib Dipilih" })}
-            error={errors.fleet_type_id}
-          />
-
-          <TextInput
-            label="No. Body *"
-            type="text"
-            placeholder="Masukan no body"
-            {...register("no_body", { required: true })}
-            error={errors.no_body}
-          />
-
-          <TextInput
-            label="Kode Trayek *"
-            type="text"
-            placeholder="Masukan kode trayek"
-            {...register("kode_trayek", { required: true })}
-            error={errors.kode_trayek}
+            {...register("shelter_type_id", { required: "Wajib Dipilih" })}
+            error={errors.shelter_type_id}
           />
         </div>
         <div>
-          <TextInput
-            label="Asal Tujuan *"
-            type="text"
-            placeholder="Masukan asal tujuan"
-            {...register("asal_tujuan", { required: true })}
-            error={errors.asal_tujuan}
-          />
-
           <Select
             label="Periode *"
             name="periode"
@@ -157,4 +129,4 @@ const ArmadaFormEdit = ({ initialData, serviceTypes, fleetTypes }) => {
   );
 };
 
-export default ArmadaFormEdit;
+export default ShelterFormAdd;

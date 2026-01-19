@@ -105,11 +105,14 @@ const ArmadaFormAdd = ({ serviceTypes, fleetTypes }) => {
             error={errors.asal_tujuan}
           />
 
-          <TextInput
+          <Select
             label="Periode *"
-            type="text"
-            placeholder="Masukan periode"
-            {...register("periode", { required: true })}
+            name="periode"
+            options={[
+              { value: "SIBUK", label: "SIBUK" },
+              { value: "TIDAK SIBUK", label: "TIDAK SIBUK" },
+            ]}
+            {...register("periode", { required: "Wajib Dipilih" })}
             error={errors.periode}
           />
 

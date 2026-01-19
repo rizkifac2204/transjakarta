@@ -6,10 +6,9 @@ import { toast } from "react-toastify";
 import Card from "@/components/ui/Card";
 import TablePagination from "@/components/ui/Table/Pagination";
 import TableSearchGlobal from "@/components/ui/Table/Search";
-import Link from "next/link";
 import Tooltip from "@/components/ui/Tooltip";
 import Icon from "@/components/ui/Icon";
-import { encodeId } from "@/libs/hash/hashId";
+import Link from "next/link";
 import {
   useReactTable,
   getCoreRowModel,
@@ -21,7 +20,7 @@ import {
 } from "@tanstack/react-table";
 const COLUMNHELPER = createColumnHelper();
 
-const QuestionSetTable = ({ initialData }) => {
+const QuestionShelterTable = ({ initialData }) => {
   const [deletingRowId, setDeletingRowId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -49,7 +48,7 @@ const QuestionSetTable = ({ initialData }) => {
 
     setDeletingRowId(id);
     try {
-      await axios.delete(`/api/armada/question-set/${id}`);
+      await axios.delete(`/api/shelter/question/${id}`);
       toast.success("Berhasil");
       setSafeData((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
@@ -60,33 +59,16 @@ const QuestionSetTable = ({ initialData }) => {
   };
 
   const columns = [
-    {
-      id: "no",
-      header: "No",
-      cell: ({ row }) => row.index + 1,
-      enableSorting: false,
-    },
-    COLUMNHELPER.accessor("description", { header: "DESKRIPSI" }),
-    COLUMNHELPER.accessor((row) => row._count?.questions ?? "", {
-      id: "questions",
-      header: "JUMLAH PERTANYAAN",
+    COLUMNHELPER.accessor("section", { header: "BAGIAN" }),
+    COLUMNHELPER.accessor("order", { header: "No" }),
+    COLUMNHELPER.accessor("basic", { header: "PELAYANAN DASAR" }),
+    COLUMNHELPER.accessor("indicator", { header: "INDIKATOR" }),
+    COLUMNHELPER.accessor((row) => row.shelter_type?.name ?? "Semua", {
+      id: "shelter_type",
+      header: "JENIS HALTE",
     }),
-    COLUMNHELPER.accessor(
-      (row) => row.service_types.map((st) => st.name).join(", "),
-      {
-        id: "service_types",
-        header: "TIPE LAYANAN",
-        cell: (info) => info.getValue(),
-      },
-    ),
-    COLUMNHELPER.accessor(
-      (row) => row.fleet_types.map((st) => st.name).join(", "),
-      {
-        id: "fleet_types",
-        header: "TIPE ARMADA",
-        cell: (info) => info.getValue(),
-      },
-    ),
+    COLUMNHELPER.accessor("spm_criteria", { header: "NILAI SPM DIUKUR" }),
+    COLUMNHELPER.accessor("spm_reference", { header: "REFERE NSI SPM" }),
     {
       id: "action",
       header: "Aksi",
@@ -94,49 +76,25 @@ const QuestionSetTable = ({ initialData }) => {
         const isDeleting = deletingRowId === row.original.id;
         const rowData = row.original;
         return (
-          <div
-            className={`flex space-x-1 rtl:space-x-reverse ${
-              isDeleting ? "pointer-events-none opacity-50" : ""
-            }`}
-          >
-            <Tooltip
-              content="Detail"
-              placement="top"
-              arrow
-              animation="shift-away"
+          <Tooltip content="Hapus" placement="top" arrow animation="shift-away">
+            <button
+              className={`action-btn ${
+                Boolean(deletingRowId) ? "pointer-events-none opacity-50" : ""
+              }`}
+              type="button"
+              disabled={!rowData.isManage}
+              onClick={() => handleDelete(rowData.id)}
             >
-              <Link
-                className="action-btn"
-                href={`/admin/armada/question-set/${encodeId(rowData.id)}`}
-              >
-                <Icon icon="solar:eye-broken" />
-              </Link>
-            </Tooltip>
-            <Tooltip
-              content="Hapus"
-              placement="top"
-              arrow
-              animation="shift-away"
-            >
-              <button
-                className={`action-btn ${
-                  Boolean(deletingRowId) ? "pointer-events-none opacity-50" : ""
-                }`}
-                type="button"
-                disabled={!rowData.isManage}
-                onClick={() => handleDelete(rowData.id)}
-              >
-                {isDeleting ? (
-                  <Icon
-                    icon="line-md:loading-twotone-loop"
-                    className="animate-spin"
-                  />
-                ) : (
-                  <Icon icon="solar:trash-bin-2-broken" />
-                )}
-              </button>
-            </Tooltip>
-          </div>
+              {isDeleting ? (
+                <Icon
+                  icon="line-md:loading-twotone-loop"
+                  className="animate-spin"
+                />
+              ) : (
+                <Icon icon="solar:trash-bin-2-broken" />
+              )}
+            </button>
+          </Tooltip>
         );
       },
     },
@@ -169,7 +127,7 @@ const QuestionSetTable = ({ initialData }) => {
 
   return (
     <Card
-      title="DATA SET PERTANYAAN"
+      title="DATA PERTANYAAN"
       headerslot={
         <div className="flex gap-2">
           <TableSearchGlobal
@@ -177,7 +135,7 @@ const QuestionSetTable = ({ initialData }) => {
             setFilter={setGlobalFilter}
           />
           <Link
-            href={`/admin/armada/question-set/add`}
+            href={`/admin/shelter/question/add`}
             scroll={false}
             className={`shadow-md cursor-pointer px-4 py-2 bg-slate-50 dark:bg-slate-700 dark:bg-opacity-60 rounded-md`}
           >
@@ -249,4 +207,4 @@ const QuestionSetTable = ({ initialData }) => {
   );
 };
 
-export default QuestionSetTable;
+export default QuestionShelterTable;

@@ -59,9 +59,7 @@ export async function POST(request) {
 
     if (!section || !indicator || !spm_criteria) {
       return Response.json(
-        {
-          message: "Missing required fields: section, indicator, spm_criteria",
-        },
+        { message: "Missing required fields" },
         { status: 400 },
       );
     }

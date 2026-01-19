@@ -99,6 +99,8 @@ export async function DELETE(request, { params }) {
 
     const deleted = await deleteShelterSurvey(parsedId);
 
+    // delete path
+
     return Response.json({
       message: "Berhasil menghapus data",
       payload: deleted,

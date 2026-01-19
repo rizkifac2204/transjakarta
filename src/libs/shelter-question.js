@@ -3,6 +3,7 @@ import prisma from "./prisma";
 export async function getAllShelterQuestion() {
   return prisma.shelter_question.findMany({
     include: { shelter_type: true },
+    orderBy: [{ section: "asc" }, { spm_reference: "asc" }, { order: "asc" }],
   });
 }
 

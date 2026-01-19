@@ -65,11 +65,11 @@ const menuItems = [
     child: [
       {
         childtitle: "Data Survey Halte",
-        childlink: "/admin/halte",
+        childlink: "/admin/shelter",
       },
       {
         childtitle: "Tambah Data",
-        childlink: "/admin/halte/add",
+        childlink: "/admin/shelter/add",
       },
     ],
   },
@@ -102,6 +102,15 @@ const menuItems = [
     isHide: true,
     icon: "solar:folder-path-connect-broken",
     link: "/admin/armada/question-set",
+    badge: null,
+    access_level: [1, 2, 3],
+  },
+
+  {
+    title: "Pertanyaan Form Halte",
+    isHide: true,
+    icon: "solar:folder-path-connect-broken",
+    link: "/admin/shelter/question",
     badge: null,
     access_level: [1, 2, 3],
   },

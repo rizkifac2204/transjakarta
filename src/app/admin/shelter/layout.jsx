@@ -2,10 +2,10 @@ export const viewport = {
   scroll: false,
 };
 
-export default function Layout({ children, modal }) {
+export default function Layout({ children, modalShelter }) {
   return (
     <>
-      {modal}
+      {modalShelter}
       {children}
     </>
   );

@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Card from "@/components/ui/Card";
 import TablePagination from "@/components/ui/Table/Pagination";
+import ButtonExport from "@/components/ui/Table/ButtonExport";
 import TableSearchGlobal from "@/components/ui/Table/Search";
 import Link from "next/link";
 import Tooltip from "@/components/ui/Tooltip";
 import Icon from "@/components/ui/Icon";
 import { encodeId } from "@/libs/hash/hashId";
+import { formatedDate } from "@/utils/formatDate";
 import {
   useReactTable,
   getCoreRowModel,
@@ -21,7 +23,7 @@ import {
 } from "@tanstack/react-table";
 const COLUMNHELPER = createColumnHelper();
 
-const QuestionSetTable = ({ initialData }) => {
+const ShelterTable = ({ initialData }) => {
   const [deletingRowId, setDeletingRowId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -43,13 +45,35 @@ const QuestionSetTable = ({ initialData }) => {
     }
   }, [initialData]);
 
+  // const exportData = useMemo(() => {
+  //   return safeData.map((row) => ({
+  //     Tanggal: new Date(row.tanggal).toLocaleDateString("id-ID"),
+  //     "Jam Mulai": new Date(row.jam_mulai).toLocaleTimeString("id-ID", {
+  //       hour: "2-digit",
+  //       minute: "2-digit",
+  //     }),
+  //     "Jam Selesai": new Date(row.jam_selesai).toLocaleTimeString("id-ID", {
+  //       hour: "2-digit",
+  //       minute: "2-digit",
+  //     }),
+  //     "No Body": row.no_body,
+  //     "Kode Trayek": row.kode_trayek,
+  //     "Asal - Tujuan": row.asal_tujuan,
+  //     "Service Type": row.service_type?.name ?? "-",
+  //     "Fleet Type": row.fleet_type?.name ?? "-",
+  //     Surveyor: row.surveyor?.nama ?? "-",
+  //     Periode: row.periode,
+  //     Selesai: row.finish ? "Ya" : "Tidak",
+  //   }));
+  // }, [safeData]);
+
   const handleDelete = async (id) => {
     const confirmed = confirm("Apakah Anda yakin ingin menghapus data ini?");
     if (!confirmed) return;
 
     setDeletingRowId(id);
     try {
-      await axios.delete(`/api/armada/question-set/${id}`);
+      await axios.delete(`/api/shelter/${id}`);
       toast.success("Berhasil");
       setSafeData((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
@@ -66,27 +90,43 @@ const QuestionSetTable = ({ initialData }) => {
       cell: ({ row }) => row.index + 1,
       enableSorting: false,
     },
-    COLUMNHELPER.accessor("description", { header: "DESKRIPSI" }),
-    COLUMNHELPER.accessor((row) => row._count?.questions ?? "", {
-      id: "questions",
-      header: "JUMLAH PERTANYAAN",
+    COLUMNHELPER.accessor((row) => row.surveyor?.nama ?? "", {
+      id: "surveyor",
+      header: "SURVEYOR",
     }),
-    COLUMNHELPER.accessor(
-      (row) => row.service_types.map((st) => st.name).join(", "),
-      {
-        id: "service_types",
-        header: "TIPE LAYANAN",
-        cell: (info) => info.getValue(),
+    COLUMNHELPER.accessor("tanggal", {
+      id: "tanggal",
+      header: "TANGGAL",
+      cell: ({ row }) => {
+        const item = row.original;
+        return formatedDate(item.tanggal, true);
       },
-    ),
-    COLUMNHELPER.accessor(
-      (row) => row.fleet_types.map((st) => st.name).join(", "),
-      {
-        id: "fleet_types",
-        header: "TIPE ARMADA",
-        cell: (info) => info.getValue(),
+      sortingFn: "datetime",
+    }),
+    COLUMNHELPER.accessor("nama_halte", { header: "HALTE" }),
+    COLUMNHELPER.accessor("kode_halte", { header: "KODE" }),
+    COLUMNHELPER.accessor("periode", { header: "PERIODE" }),
+    COLUMNHELPER.accessor((row) => row.shelter_type?.name ?? "", {
+      id: "shelter_type",
+      header: "JENIS HALTE",
+    }),
+    COLUMNHELPER.accessor("finish", {
+      id: "finish",
+      header: "STATUS",
+      cell: ({ row }) => {
+        const item = row.original;
+        if (item.finish)
+          return (
+            <Icon
+              icon="solar:check-circle-broken"
+              className="text-success-500"
+            />
+          );
+        return (
+          <Icon icon="solar:close-circle-broken" className="text-red-500" />
+        );
       },
-    ),
+    }),
     {
       id: "action",
       header: "Aksi",
@@ -107,35 +147,54 @@ const QuestionSetTable = ({ initialData }) => {
             >
               <Link
                 className="action-btn"
-                href={`/admin/armada/question-set/${encodeId(rowData.id)}`}
+                href={`/admin/shelter/${encodeId(rowData.id)}`}
               >
                 <Icon icon="solar:eye-broken" />
               </Link>
             </Tooltip>
-            <Tooltip
-              content="Hapus"
-              placement="top"
-              arrow
-              animation="shift-away"
-            >
-              <button
-                className={`action-btn ${
-                  Boolean(deletingRowId) ? "pointer-events-none opacity-50" : ""
-                }`}
-                type="button"
-                disabled={!rowData.isManage}
-                onClick={() => handleDelete(rowData.id)}
-              >
-                {isDeleting ? (
-                  <Icon
-                    icon="line-md:loading-twotone-loop"
-                    className="animate-spin"
-                  />
-                ) : (
-                  <Icon icon="solar:trash-bin-2-broken" />
-                )}
-              </button>
-            </Tooltip>
+            {rowData.isManage && (
+              <>
+                <Tooltip
+                  content="Survey"
+                  placement="top"
+                  arrow
+                  animation="shift-away"
+                >
+                  <Link
+                    className="action-btn"
+                    href={`/admin/shelter/${encodeId(rowData.id)}/survey`}
+                  >
+                    <Icon icon="solar:file-broken" />
+                  </Link>
+                </Tooltip>
+                <Tooltip
+                  content="Hapus"
+                  placement="top"
+                  arrow
+                  animation="shift-away"
+                >
+                  <button
+                    className={`action-btn ${
+                      Boolean(deletingRowId)
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }`}
+                    type="button"
+                    disabled={!rowData.isManage}
+                    onClick={() => handleDelete(rowData.id)}
+                  >
+                    {isDeleting ? (
+                      <Icon
+                        icon="line-md:loading-twotone-loop"
+                        className="animate-spin"
+                      />
+                    ) : (
+                      <Icon icon="solar:trash-bin-2-broken" />
+                    )}
+                  </button>
+                </Tooltip>
+              </>
+            )}
           </div>
         );
       },
@@ -169,20 +228,27 @@ const QuestionSetTable = ({ initialData }) => {
 
   return (
     <Card
-      title="DATA SET PERTANYAAN"
+      title="DATA SURVEY HALTE"
       headerslot={
-        <div className="flex gap-2">
+        <div className="flex items-center space-x-2">
           <TableSearchGlobal
             filter={globalFilter}
             setFilter={setGlobalFilter}
           />
-          <Link
-            href={`/admin/armada/question-set/add`}
-            scroll={false}
-            className={`shadow-md cursor-pointer px-4 py-2 bg-slate-50 dark:bg-slate-700 dark:bg-opacity-60 rounded-md`}
+          <ButtonExport fileName="Survey-Halte" data={safeData} />
+          <a
+            href="/api/halte/export"
+            className="btn btn-outline-primary btn-sm flex items-center"
+            download
           >
-            Tambah
-          </Link>
+            <Icon
+              icon="solar:file-text-bold"
+              width="16"
+              height="16"
+              className="mr-1"
+            />
+            <span>Tabulasi</span>
+          </a>
         </div>
       }
     >
@@ -249,4 +315,4 @@ const QuestionSetTable = ({ initialData }) => {
   );
 };
 
-export default QuestionSetTable;
+export default ShelterTable;

@@ -18,8 +18,6 @@ export async function resetFinishArmada(id) {
 export async function POST(request, { params }) {
   try {
     const auth = await verifyAuth();
-    // belum ada blokir authorisasi
-
     const { id } = params;
     const parsedId = parseInt(id);
     if (!id || isNaN(parsedId)) {
@@ -173,7 +171,6 @@ export async function PATCH(request, { params }) {
       where: { id: parsedId },
       data: {
         finish: true,
-        // jam_selesai: new Date(),
       },
     });
 

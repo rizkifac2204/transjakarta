@@ -1,12 +1,20 @@
 import { verifyAuth } from "@/libs/jwt";
-import { upsertShelterSurveyAnswer } from "@/libs/shelter-survey-answer";
-import { getQuestionsByShelterType } from "@/libs/shelter-question";
-import {
-  getShelterSurveyById,
-  updateShelterSurvey,
-} from "@/libs/shelter-survey";
-import getLogs from "@/libs/getLogs";
 import prisma from "@/libs/prisma";
+import getLogs from "@/libs/getLogs";
+import { parseJsonBody } from "@/utils/parseJsonBody";
+import { hapusFile } from "@/services/uploadservices";
+import { getQuestionsByShelterType } from "@/libs/shelter-question";
+import { getShelterSurveyById } from "@/libs/shelter-survey";
+import { pathShelter } from "./[question_id]/upload/route";
+
+export async function resetFinishShelter(id) {
+  await prisma.shelter_survey.update({
+    where: { id: id },
+    data: {
+      finish: false,
+    },
+  });
+}
 
 export async function POST(request, { params }) {
   try {
@@ -18,17 +26,25 @@ export async function POST(request, { params }) {
       return Response.json({ message: "ID tidak valid" }, { status: 400 });
     }
 
-    const survey = await getShelterSurveyById(parsedId);
-    if (!survey) {
+    const shelter = await getShelterSurveyById(parsedId);
+    if (!shelter) {
       return Response.json({ message: "Survey not found" }, { status: 404 });
     }
 
-    if (auth.level >= 4 && survey.surveyor_id !== auth.id) {
+    if (auth.level >= 4 && shelter.surveyor_id !== auth.id) {
       return Response.json({ message: "Forbidden" }, { status: 403 });
     }
 
+    // get path dynamic
+    const path = pathShelter(shelter);
+
     const body = await request.json();
-    const { question_id, answer, note } = body;
+    const parsedBody = parseJsonBody(body, {
+      integerFields: ["question_id"],
+      booleanFields: ["answer"],
+    });
+
+    const { question_id, answer, note } = parsedBody;
 
     if (!question_id || answer === null || typeof answer === "undefined") {
       return Response.json(
@@ -37,20 +53,51 @@ export async function POST(request, { params }) {
       );
     }
 
-    // reset finish flag when a new answer is submitted
-    if (survey.finish) {
-      await updateShelterSurvey(parsedId, { finish: false });
+    const answerRecord = await prisma.shelter_survey_answer.findUnique({
+      where: {
+        shelter_survey_id_question_id: {
+          shelter_survey_id: parsedId,
+          question_id: question_id,
+        },
+      },
+    });
+
+    const data = {
+      shelter_survey_id: parsedId,
+      question_id,
+      answer,
+      note: answer ? null : note,
+      photo_url: answer ? null : answerRecord?.photo_url || null,
+    };
+
+    // tambah atau edit jawaban survei
+    const surveyAnswer = await prisma.shelter_survey_answer.upsert({
+      where: {
+        shelter_survey_id_question_id: {
+          shelter_survey_id: data.shelter_survey_id,
+          question_id: data.question_id,
+        },
+      },
+      update: {
+        answer: data.answer,
+        note: data.note,
+        photo_url: data.photo_url,
+      },
+      create: data,
+    });
+
+    if (answerRecord?.photo_url && answer) {
+      await hapusFile(answerRecord?.photo_url, path);
     }
 
-    const newAnswer = await upsertShelterSurveyAnswer(
-      parsedId,
-      parseInt(question_id),
-      { answer: Boolean(answer), note },
-    );
+    resetFinishShelter(parsedId);
 
-    return Response.json(newAnswer, { status: 201 });
+    return Response.json({
+      message: "Berhasil menyimpan jawaban survei",
+      payload: surveyAnswer,
+    });
   } catch (error) {
-    getLogs("shelter-answer").error(error);
+    getLogs("shelter").error(error);
     return Response.json(
       {
         message: "Terjadi Kesalahan",
@@ -64,31 +111,30 @@ export async function POST(request, { params }) {
 export async function PATCH(request, { params }) {
   try {
     const auth = await verifyAuth();
-
     const { id } = params;
     const parsedId = parseInt(id);
     if (!id || isNaN(parsedId)) {
       return Response.json({ message: "ID tidak valid" }, { status: 400 });
     }
 
-    const survey = await prisma.shelter_survey.findUnique({
+    const shelter = await prisma.shelter_survey.findUnique({
       where: { id: parsedId },
       include: {
         answers: true,
       },
     });
 
-    if (!survey) {
+    if (!shelter) {
       return Response.json({ message: "Not Found" }, { status: 404 });
     }
-    if (auth.level >= 4 && auth.id !== survey.surveyor_id) {
+    if (auth.level >= 4 && auth.id !== shelter.surveyor_id) {
       return Response.json({ message: "Forbidden" }, { status: 403 });
     }
 
-    const questions = await getQuestionsByShelterType(survey.shelter_type_id);
+    const questions = await getQuestionsByShelterType(shelter.shelter_type_id);
 
     const totalQuestions = questions.length;
-    const totalAnswers = survey.answers.length;
+    const totalAnswers = shelter.answers.length;
 
     if (totalAnswers < totalQuestions) {
       return Response.json(
@@ -97,7 +143,7 @@ export async function PATCH(request, { params }) {
       );
     }
 
-    for (const answer of survey.answers) {
+    for (const answer of shelter.answers) {
       if (!answer.answer && !answer.note && !answer.photo_url) {
         const question = questions.find((q) => q.id === answer.question_id);
         return Response.json(
@@ -109,8 +155,11 @@ export async function PATCH(request, { params }) {
       }
     }
 
-    const finishedSurvey = await updateShelterSurvey(parsedId, {
-      finish: true,
+    const finishedSurvey = await prisma.shelter_survey.update({
+      where: { id: parsedId },
+      data: {
+        finish: true,
+      },
     });
 
     return Response.json({
@@ -118,7 +167,7 @@ export async function PATCH(request, { params }) {
       payload: finishedSurvey,
     });
   } catch (error) {
-    getLogs("shelter-answer").error(error);
+    getLogs("shelter").error(error);
     return Response.json(
       {
         message: "Terjadi Kesalahan",
@@ -128,5 +177,3 @@ export async function PATCH(request, { params }) {
     );
   }
 }
-
-// belum ada delete

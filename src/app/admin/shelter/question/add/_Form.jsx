@@ -1,0 +1,119 @@
+"use client";
+
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+
+import Select from "@/components/ui/Select";
+import Button from "@/components/ui/Button";
+import TextInput from "@/components/ui/TextInput";
+
+const QuestionForm = ({ types }) => {
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    defaultValues: {
+      shelter_type_id: "",
+      section: "",
+      basic: "",
+      indicator: "",
+      spm_criteria: "",
+      spm_reference: "",
+      order: "",
+    },
+  });
+
+  const onSubmit = async (formData) => {
+    try {
+      await axios.post(`/api/shelter/question`, formData);
+      toast.success("Berhasil Membuat Pertanyaan");
+      router.refresh();
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message || "Gagal Membuat Data");
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <Select
+        label="Bagian *"
+        name="section"
+        options={[
+          { value: "KEAMANAN", label: "KEAMANAN" },
+          { value: "KESELAMATAN", label: "KESELAMATAN" },
+          { value: "KENYAMANAN", label: "KENYAMANAN" },
+          { value: "KETERJANGKAUAN", label: "KETERJANGKAUAN" },
+          { value: "KESETARAAN", label: "KESETARAAN" },
+          { value: "KETERATURAN", label: "KETERATURAN" },
+        ]}
+        placeholder={"Pilih Bagian"}
+        {...register("section", { required: "Pilih Bagian" })}
+        error={errors.section}
+      />
+
+      <TextInput
+        label="Urut Soal *"
+        type="text"
+        placeholder="a/b/c etc..."
+        {...register("order", { required: true })}
+        error={errors.order}
+      />
+
+      <TextInput
+        label="Jenis Pelayanan Dasar *"
+        type="text"
+        {...register("basic", { required: true })}
+        error={errors.basic}
+      />
+
+      <TextInput
+        label="Indikator *"
+        type="text"
+        {...register("indicator", { required: true })}
+        error={errors.indicator}
+      />
+
+      <Select
+        label="Tipe Halte *"
+        name="shelter_type_id"
+        options={types.map((item) => ({
+          value: item.id,
+          label: item.name,
+        }))}
+        placeholder={"Semua"}
+        {...register("shelter_type_id")}
+      />
+
+      <TextInput
+        label="Nilai SPM Yang Diukur *"
+        type="text"
+        {...register("spm_criteria", { required: true })}
+        error={errors.spm_criteria}
+      />
+
+      <TextInput
+        label="Refere NSI SPM *"
+        type="text"
+        {...register("spm_reference", { required: true })}
+        error={errors.spm_reference}
+      />
+
+      <div className="flex justify-end space-x-3 rtl:space-x-reverse">
+        <Button
+          type="submit"
+          className="btn-primary w-full btn-sm"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Processing..." : "Submit"}
+        </Button>
+      </div>
+    </form>
+  );
+};
+
+export default QuestionForm;
