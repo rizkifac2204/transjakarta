@@ -5,25 +5,29 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
+import Icon from "@/components/ui/Icon";
 
 const tables2 = [
   {
-    title: "Survey Armada",
-    price_Monthly: "$26",
+    title: "Armada",
+    icon: "solar:bus-broken",
+    des: "Formulir Armada",
     button: "Lakukan Survey",
     link: "/admin/armada/add",
     text: "Formulir untuk mengisi data survey SPM Armada Transjakarta",
   },
   {
-    title: "Survey Halte",
-    price_Monthly: "$16",
+    title: "Halte",
+    icon: "solar:streets-navigation-broken",
+    des: "Formulir Halte",
     button: "Lakukan Survey",
     link: "/admin/shelter/add",
     text: "Formulir untuk mengisi data survey SPM Halte Transjakarta",
   },
   {
     title: "Headway",
-    price_Monthly: "$16",
+    icon: "solar:flip-horizontal-broken",
+    des: "Formulir Headway",
     button: "Lakukan Survey",
     link: "/admin/headway/add",
     text: "Formulir untuk mengisi data survey Headway Layanan Transjakarta",
@@ -113,26 +117,15 @@ function Page() {
               >
                 <header className="mb-6">
                   <h4 className={`text-xl mb-5`}>{item.title}</h4>
-                  <div>
+                  <div className="flex items-center gap-x-2">
                     <span className="text-[32px] leading-10 font-medium">
-                      {item.price_Monthly}
+                      <Icon icon={item.icon} />
                     </span>
 
                     <span className="text-xs bg-warning-50 text-warning-500 font-medium px-2 py-1 rounded-full inline-block dark:bg-slate-700 uppercase h-auto">
-                      Save 20%
+                      {item.des}
                     </span>
                   </div>
-                  <p
-                    className={` text-sm
-             ${
-               item.bg === "bg-slate-900"
-                 ? "text-slate-100"
-                 : "text-slate-500 dark:text-slate-300"
-             }
-                `}
-                  >
-                    per user/month, annually
-                  </p>
                 </header>
                 <div className="price-body space-y-8">
                   <p className={`text-sm leading-5`}>{item.text}</p>
